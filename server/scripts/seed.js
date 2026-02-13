@@ -1,0 +1,83 @@
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import User from '../src/models/User.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.join(__dirname, '../.env') });
+
+const seedUsers = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('📦 Connected to MongoDB');
+
+    // Clear existing users to avoid duplicates
+    await User.deleteMany({});
+    console.log('🧹 Cleared existing users');
+
+    const users = [
+      {
+        name: 'System Admin',
+        email: 'admin@demo.com',
+        password: 'password123',
+        role: 'admin',
+        phone: '+1000000000'
+      },
+      {
+        name: 'John Passenger',
+        email: 'passenger@demo.com',
+        password: 'password123',
+        role: 'passenger',
+        phone: '+1111111111',
+        passengerDetails: {
+            rating: 4.8,
+            totalRides: 12
+        }
+      },
+      {
+        name: 'Mike Driver',
+        email: 'driver@demo.com',
+        password: 'password123',
+        role: 'driver',
+        phone: '+2222222222',
+        driverDetails: {
+          licenseNumber: 'DL123456',
+          vehicleType: 'premium',
+          vehicleModel: 'Tesla Model 3',
+          vehiclePlate: 'UBER-001',
+          vehicleColor: 'Black',
+          vehicleYear: 2023,
+          isAvailable: true,
+          rating: 4.9,
+          totalRides: 154,
+          earnings: 1250.50,
+          currentLocation: {
+            type: 'Point',
+            coordinates: [-74.0060, 40.7128] // Example coordinates (NY)
+          }
+        }
+      }
+    ];
+
+    // Use Promise.all to create users in parallel, ensuring pre-save hooks (hashing) run
+    await Promise.all(users.map(user => User.create(user)));
+
+    console.log('✅ All users seeded successfully!');
+    console.log('-----------------------------------');
+    console.log('👤 Admin:     admin@demo.com');
+    console.log('👤 Passenger: passenger@demo.com');
+    console.log('🚗 Driver:    driver@demo.com');
+    console.log('🔑 Password:  password123 (for all)');
+    console.log('-----------------------------------');
+
+    process.exit(0);
+  } catch (error) {
+    console.error('❌ Error seeding users:', error);
+    process.exit(1);
+  }
+};
+
+seedUsers();

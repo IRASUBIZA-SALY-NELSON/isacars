@@ -1,0 +1,345 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Car, MapPin, CreditCard, Star, Shield, Clock, Phone, Mail, X, MessageSquare, ArrowRight } from 'lucide-react';
+import './LandingPage.css';
+
+const LandingPage = () => {
+  const navigate = useNavigate();
+  const [selectedCar, setSelectedCar] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+
+  const heroImages = [
+    '/8a.jpg',
+    '/alone.jpeg',
+    '/car.jpeg',
+    // '/taxi.jpeg',
+    '/taxio.jpeg',
+    '/image.jpeg',
+    '/bg.jpeg',
+    '/IMG-20251228-WA0128.jpg',
+    '/IMG-20251228-WA0141.jpg',
+    '/IMG-20251228-WA0146.jpg',
+    '/IMG-20251228-WA0163.jpg'
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
+
+  const fleet = [
+    {
+      id: 1,
+      name: 'ISACARS Standard',
+      image: '/IMG-20251228-WA0128.jpg',
+      description: 'Affordable, everyday rides',
+      details: 'Our most popular option. Fits up to 4 passengers comfortably. Perfect for daily commutes and errands.',
+      stats: { passengers: 4, bags: 2, type: 'Sedan' }
+    },
+    {
+      id: 2,
+      name: 'ISACARS Luxury',
+      image: '/IMG-20251228-WA0141.jpg',
+      description: 'Premium rides with professional drivers',
+      details: 'Luxury at its finest. Enjoy a high-end vehicle and professional driver for special occasions or business travel.',
+      stats: { passengers: 4, bags: 3, type: 'Luxury' }
+    },
+    {
+      id: 3,
+      name: 'ISACARS XL',
+      image: '/IMG-20251228-WA0146.jpg',
+      description: 'Larger rides for groups & luggage',
+      details: 'Need more space? SUVs and Minivans for up to 6 people. Great for airport trips or family outings.',
+      stats: { passengers: 6, bags: 5, type: 'SUV/Van' }
+    },
+    {
+      id: 4,
+      name: 'ISACARS Eco',
+      image: '/IMG-20251228-WA0163.jpg',
+      description: 'Sustainable electric rides',
+      details: 'Reduce your carbon footprint. Ride in a hybrid or fully electric vehicle without compromising on comfort.',
+      stats: { passengers: 4, bags: 2, type: 'Electric' }
+    },
+    {
+      id: 5,
+      name: 'ISACARS Elite',
+      image: '/car.jpeg',
+      description: 'Elite cars for ultimate comfort',
+      details: 'Our top-tier luxury service. Exceptional vehicles for those who want the absolute best experience.',
+      stats: { passengers: 4, bags: 3, type: 'Exclusive' }
+    },
+    {
+      id: 6,
+      name: 'ISACARS Premium',
+      image: '/image.jpeg',
+      description: 'Top-tier cars with extra legroom',
+      details: 'Travel in style and comfort with our premium fleet. Extra space and superior features for a more relaxed journey.',
+      stats: { passengers: 4, bags: 2, type: 'Premium' }
+    },
+    {
+      id: 7,
+      name: 'ISACARS Private',
+      image: '/alone.jpeg',
+      description: 'Discrete rides for total privacy',
+      details: 'A specialized service for those who prioritize privacy and discretion. Unmarked high-quality vehicles.',
+      stats: { passengers: 3, bags: 2, type: 'Discrete' }
+    },
+    {
+      id: 8,
+      name: 'ISACARS Select',
+      image: '/8a.jpg',
+      description: 'Highly rated drivers and newer cars',
+      details: 'A step up from ISACARS Standard. Enjoy rides in newer vehicles with our top-rated drivers for a consistently great experience.',
+      stats: { passengers: 4, bags: 2, type: 'Select' }
+    }
+  ];
+
+  return (
+    <div className="landing-page">
+      {/* Hero Section */}
+      <section className="hero">
+        <div className="hero-overlay"></div>
+        <div className="container hero-content">
+          <div className="hero-text">
+            <h1 className="hero-title">
+              Your Ride, <span className="gradient-text">On Demand</span>
+            </h1>
+            <p className="hero-subtitle">
+              Book a ride in seconds. Safe, reliable, and affordable transportation at your fingertips.
+            </p>
+            <div className="hero-buttons">
+              <button className="btn btn-primary btn-lg" onClick={() => navigate('/register')}>
+                Get Started
+              </button>
+              <button className="btn btn-secondary btn-lg" onClick={() => navigate('/login')}>
+                Sign In
+              </button>
+            </div>
+          </div>
+          <div className="hero-image">
+            <div className="floating-card hero-car-card">
+              {heroImages.map((img, index) => (
+                <img
+                  key={index}
+                  src={img}
+                  alt={`Premium Ride ${index + 1}`}
+                  className={`hero-car-image ${index === currentImageIndex ? 'active' : ''}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Fleet Showcase Section */}
+      <section className="fleet-section">
+        <div className="container">
+          <h2 className="section-title">Experience Our Premium Fleet</h2>
+          <p className="section-subtitle">Choose the perfect ride for any occasion. Select a car to view details.</p>
+
+          <div className="fleet-grid">
+            {fleet.map((car) => (
+              <div key={car.id} className="fleet-card" onClick={() => setSelectedCar(car)}>
+                <div className="fleet-image-wrapper">
+                  <img src={car.image} alt={car.name} className="fleet-image" />
+                  <div className="fleet-overlay">
+                    <span>View Details</span>
+                  </div>
+                </div>
+                <div className="fleet-info">
+                  <h3>{car.name}</h3>
+                  <p>{car.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Original Vehicle Types Section */}
+      <section className="vehicles-section">
+        <div className="container">
+          <h2 className="section-title">Transparent Pricing</h2>
+          <p className="section-subtitle">No hidden fees. Know what you pay.</p>
+
+          <div className="vehicles-grid">
+            {fleet.map((car) => (
+              <div key={car.id} className="vehicle-card card">
+                <div className="vehicle-image-small-container">
+                    <img src={car.image} alt={car.name} className="vehicle-image-small" />
+                </div>
+                <h3>{car.name}</h3>
+                <p className="vehicle-price">${(car.id * 0.5 + 1).toFixed(2)}/km</p>
+                <p className="vehicle-capacity">
+                  <Star size={14} fill="currentColor" style={{color: '#FFB800'}} />
+                  <span>{car.stats.passengers} Seats available</span>
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="cta-section">
+        <div className="container">
+          <div className="cta-content">
+            <h2>Ready to Start Your Journey?</h2>
+            <p>Join thousands of satisfied riders today</p>
+            <button className="btn btn-accent btn-lg" onClick={() => navigate('/register')}>
+              Sign Up Now
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="container">
+          <div className="footer-content">
+            <div className="footer-section">
+              <h3>ISACARS</h3>
+              <p>Your trusted ride-hailing partner</p>
+            </div>
+            <div className="footer-section">
+              <h4>Company</h4>
+              <ul>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Careers</a></li>
+                <li><a href="#">Press</a></li>
+              </ul>
+            </div>
+            <div className="footer-section">
+              <h4>Support</h4>
+              <ul>
+                <li><a href="#">Help Center</a></li>
+                <li><a href="#">Safety</a></li>
+                <li><a href="#">Contact</a></li>
+              </ul>
+            </div>
+            <div className="footer-section">
+              <h4>Legal</h4>
+              <ul>
+                <li><a href="#">Terms</a></li>
+                <li><a href="#">Privacy</a></li>
+                <li><a href="#">Cookies</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <p>&copy; 2026 ISACARS. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+
+      {/* Car Details Modal */}
+      {selectedCar && (
+        <div className="modal-overlay" onClick={() => setSelectedCar(null)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setSelectedCar(null)}>&times;</button>
+            <div className="modal-image-container">
+               <img src={selectedCar.image} alt={selectedCar.name} className="modal-image" />
+            </div>
+            <div className="modal-body">
+              <h2>{selectedCar.name}</h2>
+              <p className="modal-desc">{selectedCar.details}</p>
+
+              <div className="car-stats-grid">
+                <div className="stat-item">
+                  <span className="stat-label">Passengers</span>
+                  <span className="stat-value">👤 {selectedCar.stats.passengers}</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">Luggage</span>
+                  <span className="stat-value">🧳 {selectedCar.stats.bags}</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">Class</span>
+                  <span className="stat-value">✨ {selectedCar.stats.type}</span>
+                </div>
+              </div>
+
+              <button className="btn btn-primary btn-block mt-4" onClick={() => {
+                setSelectedCar(null);
+                navigate('/register');
+              }}>
+                Book This Ride
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Contact Button */}
+      <button
+        className={`floating-contact-btn ${isContactModalOpen ? 'hidden' : ''}`}
+        onClick={() => setIsContactModalOpen(true)}
+      >
+        <div className="btn-pulse"></div>
+        <Phone size={24} />
+      </button>
+
+      {/* Contact Us Modal */}
+      {isContactModalOpen && (
+        <div className="contact-modal-overlay" onClick={() => setIsContactModalOpen(false)}>
+          <div className="contact-modal-content" onClick={e => e.stopPropagation()}>
+            <button className="contact-modal-close" onClick={() => setIsContactModalOpen(false)}>
+              <X size={20} />
+            </button>
+            <div className="contact-modal-header">
+              <h2>Contact Us</h2>
+            </div>
+            <div className="contact-modal-body">
+              <div className="contact-item">
+                <div className="contact-icon-wrapper call">
+                  <Phone size={20} />
+                </div>
+                <div className="contact-text">
+                  <span className="contact-label">Call us</span>
+                  <span className="contact-value">+250 781 944 664</span>
+                </div>
+              </div>
+
+              <div className="contact-item">
+                <div className="contact-icon-wrapper email">
+                  <Mail size={20} />
+                </div>
+                <div className="contact-text">
+                  <span className="contact-label">Email us</span>
+                  <span className="contact-value">info@isacars.rw</span>
+                </div>
+              </div>
+
+              <div className="contact-item">
+                <div className="contact-icon-wrapper location">
+                  <MapPin size={20} />
+                </div>
+                <div className="contact-text">
+                  <span className="contact-label">Visit us</span>
+                  <span className="contact-value">Gisenyi, Rwanda</span>
+                </div>
+              </div>
+
+              <div className="contact-divider">
+                <span>or</span>
+              </div>
+
+              <button className="contact-submit-btn">
+                Send us a message <ArrowRight size={18} />
+              </button>
+            </div>
+            <div className="contact-modal-footer">
+              <span>Powered by SALES Team</span>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default LandingPage;

@@ -1,0 +1,294 @@
+/* Driver App Layout */
+.driver-dashboard {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--color-gray-100);
+}
+
+/* Header / Top Bar */
+.app-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 20; /* Above Map */
+  pointer-events: none; /* Let clicks pass through to map where transparent */
+}
+
+.menu-trigger {
+  pointer-events: auto;
+  background: white;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-gray-800);
+}
+
+.status-indicator {
+  pointer-events: auto;
+  background: white;
+  padding: 8px 16px;
+  border-radius: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.status-dot.online { background-color: var(--color-success); }
+.status-dot.offline { background-color: var(--color-gray-400); }
+
+/* Full Screen Map Container */
+.map-view-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+/* Sidebar / Drawer */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 100;
+  animation: fadeIn 0.3s;
+}
+
+.app-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 85%;
+  max-width: 300px;
+  background: white;
+  z-index: 101;
+  box-shadow: 2px 0 20px rgba(0,0,0,0.2);
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.app-sidebar.open {
+  transform: translateX(0);
+}
+
+/* Sidebar Content */
+.sidebar-header {
+  padding: 30px 20px;
+  background: var(--color-success); /* Changed from gray-900 to Green */
+  color: white;
+}
+
+.user-profile-summary {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.profile-avatar {
+  width: 50px;
+  height: 50px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: white;
+  border: 2px solid rgba(255,255,255,0.3);
+}
+
+.profile-info h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.profile-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.sidebar-stats {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  margin-bottom: 20px;
+}
+
+.mini-stat {
+  text-align: center;
+}
+
+.mini-stat-label {
+  display: block;
+  font-size: 0.75rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mini-stat-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.toggle-availability-btn {
+  background: rgba(0,0,0,0.2); /* Darker transparent bg */
+  border: none;
+  color: white;
+  padding: 12px 15px;
+  border-radius: 12px;
+  width: 100%;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.toggle-availability-btn.active {
+  background: white; /* White bg for active state */
+  color: var(--color-success); /* Green text */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.sidebar-menu {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 0;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 25px;
+  color: var(--color-gray-700);
+  text-decoration: none;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background: var(--color-gray-100);
+  color: var(--color-primary);
+}
+
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid var(--color-gray-100);
+}
+
+/* Bottom Sheet / Floating Action Cards */
+.bottom-panel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  z-index: 30;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.action-card {
+  width: 100%;
+  max-width: 500px;
+  background: white;
+  border-radius: 25px 25px 0 0; /* Rounded top only like a sheet */
+  padding: 25px;
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
+  pointer-events: auto;
+  position: relative;
+  /* Entrance Animation */
+  animation: slideUp 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  margin-bottom: 0; /* Attach to bottom */
+}
+
+/* Handle Bar for Bottom Sheet */
+.action-card::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 5px;
+  background-color: var(--color-gray-200);
+  border-radius: 10px;
+}
+
+/* Animations */
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.request-card {
+  border-left: none; /* Remove old border */
+  border-top: 5px solid var(--color-success); /* Top accent */
+}
+
+.btn-accept {
+  width: 100%;
+  padding: 16px;
+  margin-top: 20px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 16px;
+  background: var(--color-success); /* Use vibrant green */
+  color: white;
+  border: none;
+  box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-accept:active {
+  transform: scale(0.98);
+}
+
+
+.toggle-availability-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  width: 100%;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+.toggle-availability-btn.active {
+  background: var(--color-success);
+  border-color: var(--color-success);
+}
