@@ -112,22 +112,22 @@ const Login = () => {
           <div className="demo-accounts">
             <div className="demo-account">
               <strong>Passenger</strong>
-              <p>passenger@demo.com</p>
+              <p>passenger@isacars.rw</p>
               <p>password123</p>
             </div>
             <div className="demo-account">
               <strong>Driver</strong>
-              <p>driver@demo.com</p>
+              <p>driver@isacars.rw</p>
               <p>password123</p>
             </div>
             <div className="demo-account">
               <strong>Driver</strong>
-              <p>driver2@demo.com</p>
+              <p>driver2@isacars.rw</p>
               <p>password123</p>
             </div>
             <div className="demo-account">
               <strong>Admin</strong>
-              <p>admin@demo.com</p>
+              <p>admin@isacars.rw</p>
               <p>password123</p>
             </div>
           </div>

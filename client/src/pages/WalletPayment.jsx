@@ -82,7 +82,7 @@ const WalletPayment = () => {
           _id: '3',
           type: 'digital_wallet',
           provider: 'paypal',
-          email: 'john.doe@example.com',
+          email: 'john.doe@isacars.rw',
           isDefault: false
         }
       ]);
@@ -150,7 +150,7 @@ const WalletPayment = () => {
 
   const handleAddCard = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.cardNumber || !formData.cardName || !formData.expiryDate || !formData.cvv) {
       toast.error('Please fill all card details');
       return;
@@ -207,7 +207,7 @@ const WalletPayment = () => {
 
   const handleAddWallet = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.walletProvider || !formData.walletNumber) {
       toast.error('Please fill wallet details');
       return;
@@ -299,7 +299,7 @@ const WalletPayment = () => {
         ...wallet,
         balance: wallet.balance + parseFloat(amount)
       });
-      
+
       // Add transaction record
       const newTransaction = {
         _id: Date.now().toString(),
@@ -311,7 +311,7 @@ const WalletPayment = () => {
         paymentMethod: 'credit_card'
       };
       setTransactions([newTransaction, ...transactions]);
-      
+
       toast.success(`$${parseFloat(amount)} added to wallet`);
     } catch (error) {
       toast.error('Failed to top up wallet');
@@ -320,7 +320,7 @@ const WalletPayment = () => {
         ...wallet,
         balance: wallet.balance + parseFloat(amount)
       });
-      
+
       const newTransaction = {
         _id: Date.now().toString(),
         type: 'wallet_topup',
@@ -331,7 +331,7 @@ const WalletPayment = () => {
         paymentMethod: 'credit_card'
       };
       setTransactions([newTransaction, ...transactions]);
-      
+
       toast.success(`$${parseFloat(amount)} added to wallet`);
     }
   };
@@ -398,14 +398,14 @@ const WalletPayment = () => {
               <Wallet size={24} />
               <h2>Wallet Balance</h2>
             </div>
-            <button 
+            <button
               className="toggle-balance-btn"
               onClick={() => setShowBalance(!showBalance)}
             >
               {showBalance ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
-          
+
           <div className="wallet-balance">
             <div className="balance-amount">
               {showBalance ? `$${wallet?.balance.toFixed(2) || '0.00'}` : '••••••'}
@@ -438,7 +438,7 @@ const WalletPayment = () => {
               <div className="stat-label">Total Added</div>
             </div>
           </div>
-          
+
           <div className="stat-card">
             <div className="stat-icon">
               <DollarSign size={20} />
@@ -499,7 +499,7 @@ const WalletPayment = () => {
                       </>
                     )}
                   </div>
-                  
+
                   <div className="method-meta">
                     {method.isDefault && (
                       <div className="default-badge">
@@ -517,7 +517,7 @@ const WalletPayment = () => {
 
                 <div className="method-actions">
                   {!method.isDefault && (
-                    <button 
+                    <button
                       className="action-btn set-default"
                       onClick={() => handleSetDefault(method._id)}
                       title="Set as default"
@@ -525,7 +525,7 @@ const WalletPayment = () => {
                       <Check size={16} />
                     </button>
                   )}
-                  <button 
+                  <button
                     className="action-btn delete"
                     onClick={() => handleDeleteMethod(method._id)}
                     title="Remove method"
@@ -564,7 +564,7 @@ const WalletPayment = () => {
                   {transaction.type === 'wallet_topup' && <TrendingUp size={20} className="income" />}
                   {transaction.type === 'refund' && <AlertCircle size={20} className="refund" />}
                 </div>
-                
+
                 <div className="transaction-details">
                   <div className="transaction-description">{transaction.description}</div>
                   <div className="transaction-meta">
@@ -594,7 +594,7 @@ const WalletPayment = () => {
                 <X size={20} />
               </button>
             </div>
-            
+
             <form onSubmit={handleAddCard} className="modal-body">
               <div className="form-group">
                 <label>Card Number</label>
@@ -690,7 +690,7 @@ const WalletPayment = () => {
                 <X size={20} />
               </button>
             </div>
-            
+
             <form onSubmit={handleAddWallet} className="modal-body">
               <div className="form-group">
                 <label>Wallet Provider</label>
@@ -715,7 +715,7 @@ const WalletPayment = () => {
                   name="walletNumber"
                   value={formData.walletNumber}
                   onChange={handleInputChange}
-                  placeholder="john.doe@example.com"
+                  placeholder="john.doe@isacars.rw"
                   required
                 />
               </div>
