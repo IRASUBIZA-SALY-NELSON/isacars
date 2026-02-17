@@ -39,7 +39,7 @@ const Icon = ({ name, size = 18, color = "currentColor" }) => {
 const DriverEarnings = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   // Mock Earnings Data
   const weeklyEarnings = [
@@ -59,6 +59,31 @@ const DriverEarnings = () => {
       <DriverSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} currentPage="earnings" />
 
       <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden"}}>
+        {/* Header */}
+        <header style={{background:C.panel,borderBottom:`1px solid ${C.border}`,padding:"0 24px",height:60,display:"flex",alignItems:"center",gap:16,flexShrink:0,boxShadow:"0 1px 3px rgba(0,0,0,0.06)"}}>
+          <button onClick={() => navigate('/driver/dashboard')}
+            style={{width:36,height:36,borderRadius:8,border:`1px solid ${C.border}`,background:C.card,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0,transition:"border-color 0.2s"}}
+            onMouseEnter={e=>e.currentTarget.style.borderColor=C.green}
+            onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
+            <Icon name="arrowLeft" size={16} color={C.muted}/>
+          </button>
+
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            style={{width:36,height:36,borderRadius:8,border:`1px solid ${C.border}`,background:C.card,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0,transition:"border-color 0.2s"}}
+            onMouseEnter={e=>e.currentTarget.style.borderColor=C.green}
+            onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
+            <Menu size={16} color={C.muted}/>
+          </button>
+
+          <div style={{minWidth:0}}>
+            <div style={{fontSize:15,fontWeight:800,color:C.text,whiteSpace:"nowrap"}}>Earnings</div>
+            <div style={{fontSize:11,color:C.muted,whiteSpace:"nowrap"}}>{new Date().toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}</div>
+          </div>
+
+          <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:10,flexShrink:0}}>
+            <div style={{width:36,height:36,borderRadius:"50%",background:`linear-gradient(135deg,${C.greenDk},${C.green})`,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:13,color:"#fff",boxShadow:`0 0 10px ${C.green}40`,flexShrink:0}}>{user?.name?.charAt(0).toUpperCase() || 'D'}</div>
+          </div>
+        </header>
 
       {/* Content */}
       <main style={{flex:1,overflowY:"auto",padding:24}}>

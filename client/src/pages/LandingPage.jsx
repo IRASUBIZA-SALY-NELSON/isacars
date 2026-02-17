@@ -8,6 +8,7 @@ const LandingPage = () => {
   const [selectedCar, setSelectedCar] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   const heroImages = [
     '/8a.jpg',
@@ -141,22 +142,185 @@ const LandingPage = () => {
           <h2 className="section-title">Experience Our Premium Fleet</h2>
           <p className="section-subtitle">Choose the perfect ride for any occasion. Select a car to view details.</p>
 
-          <div className="fleet-grid">
-            {fleet.map((car) => (
-              <div key={car.id} className="fleet-card" onClick={() => setSelectedCar(car)}>
-                <div className="fleet-image-wrapper">
-                  <img src={car.image} alt={car.name} className="fleet-image" />
-                  <div className="fleet-overlay">
-                    <span>View Details</span>
+          {/* First Row - Left to Right */}
+          <div className="fleet-scroll-container">
+            <div className={`fleet-scroll-track`} >
+              {[...fleet.slice(0, 3), ...fleet.slice(0, 3), ...fleet.slice(0, 3)].map((car, index) => (
+                <div
+                  key={`row1-${index}`}
+                  className="fleet-card-scroll"
+                  onClick={() => {
+                    setSelectedCar(car);
+                    // setIsPaused(true); // Removed as automatic scrolling is removed
+                  }}
+                >
+                  <div className="fleet-image-wrapper">
+                    <img src={car.image} alt={car.name} className="fleet-image" />
+                  </div>
+                  <div className="fleet-info">
+                    <h3>{car.name}</h3>
+                    <p>{car.description}</p>
                   </div>
                 </div>
-                <div className="fleet-info">
-                  <h3>{car.name}</h3>
-                  <p>{car.description}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+
+          {/* Second Row - Right to Left */}
+          <div className="fleet-scroll-container" style={{ marginTop: '24px' }}>
+            <div className={`fleet-scroll-track`} >
+              {[...fleet.slice(3, 6), ...fleet.slice(3, 6), ...fleet.slice(3, 6)].map((car, index) => (
+                <div
+                  key={`row2-${index}`}
+                  className="fleet-card-scroll"
+                  onClick={() => {
+                    setSelectedCar(car);
+                    // setIsPaused(true); // Removed as automatic scrolling is removed
+                  }}
+                >
+                  <div className="fleet-image-wrapper">
+                    <img src={car.image} alt={car.name} className="fleet-image" />
+                  </div>
+                  <div className="fleet-info">
+                    <h3>{car.name}</h3>
+                    <p>{car.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Third Row - Left to Right */}
+          <div className="fleet-scroll-container" style={{ marginTop: '24px' }}>
+            <div className={`fleet-scroll-track`} >
+              {[...fleet.slice(6, 8), ...fleet.slice(6, 8), ...fleet.slice(6, 8)].map((car, index) => (
+                <div
+                  key={`row3-${index}`}
+                  className="fleet-card-scroll"
+                  onClick={() => {
+                    setSelectedCar(car);
+                    // setIsPaused(true); // Removed as automatic scrolling is removed
+                  }}
+                >
+                  <div className="fleet-image-wrapper">
+                    <img src={car.image} alt={car.name} className="fleet-image" />
+                  </div>
+                  <div className="fleet-info">
+                    <h3>{car.name}</h3>
+                    <p>{car.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CSS Animations */}
+          <style>{`
+            .fleet-scroll-container {
+              overflow-x: auto;
+              overflow-y: hidden;
+              width: 100%;
+              position: relative;
+              padding: 10px 0;
+              cursor: grab;
+              scroll-behavior: smooth;
+            }
+
+            .fleet-scroll-container:active {
+              cursor: grabbing;
+            }
+
+            .fleet-scroll-container::-webkit-scrollbar {
+              height: 8px;
+            }
+
+            .fleet-scroll-container::-webkit-scrollbar-track {
+              background: #f1f1f1;
+              border-radius: 10px;
+            }
+
+            .fleet-scroll-container::-webkit-scrollbar-thumb {
+              background: #22c55e;
+              border-radius: 10px;
+            }
+
+            .fleet-scroll-container::-webkit-scrollbar-thumb:hover {
+              background: #16a34a;
+            }
+
+            .fleet-scroll-track {
+              display: flex;
+              gap: 24px;
+              width: fit-content;
+            }
+
+            .fleet-card-scroll {
+              min-width: 300px;
+              max-width: 300px;
+              background: white;
+              border-radius: 16px;
+              overflow: hidden;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+              cursor: pointer;
+              transition: transform 0.3s ease, box-shadow 0.3s ease;
+              flex-shrink: 0;
+            }
+
+            .fleet-card-scroll:hover {
+              transform: translateY(-8px);
+              box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            }
+
+            .fleet-card-scroll .fleet-image-wrapper {
+              position: relative;
+              width: 100%;
+              height: 200px;
+              overflow: hidden;
+              background: #f8fafc;
+            }
+
+            .fleet-card-scroll .fleet-image {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+
+            .fleet-card-scroll .fleet-info {
+              padding: 20px;
+            }
+
+            .fleet-card-scroll .fleet-info h3 {
+              margin: 0 0 8px 0;
+              font-size: 18px;
+              font-weight: 700;
+              color: #111827;
+            }
+
+            .fleet-card-scroll .fleet-info p {
+              margin: 0;
+              font-size: 14px;
+              color: #6b7280;
+              line-height: 1.5;
+            }
+
+            @keyframes scrollLeft {
+              0% {
+                transform: translateX(0);
+              }
+              100% {
+                transform: translateX(-33.333%);
+              }
+            }
+
+            @keyframes scrollRight {
+              0% {
+                transform: translateX(-33.333%);
+              }
+              100% {
+                transform: translateX(0);
+              }
+            }
+          `}</style>
         </div>
       </section>
 
@@ -238,9 +402,15 @@ const LandingPage = () => {
 
       {/* Car Details Modal */}
       {selectedCar && (
-        <div className="modal-overlay" onClick={() => setSelectedCar(null)}>
+        <div className="modal-overlay" onClick={() => {
+          setSelectedCar(null);
+          setIsPaused(false);
+        }}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setSelectedCar(null)}>&times;</button>
+            <button className="modal-close" onClick={() => {
+              setSelectedCar(null);
+              setIsPaused(false);
+            }}>&times;</button>
             <div className="modal-image-container">
                <img src={selectedCar.image} alt={selectedCar.name} className="modal-image" />
             </div>

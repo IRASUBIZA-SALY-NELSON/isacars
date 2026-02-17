@@ -1,8 +1,28 @@
 import User from '../models/User.js';
 
-// @desc    Update driver location
-// @route   PUT /api/drivers/location
-// @access  Private (Driver)
+/**
+ * @desc    Update driver location
+ * @route   PUT /api/drivers/location
+ * @access  Private (Driver)
+ * @param   {number} latitude - Current latitude
+ * @param   {number} longitude - Current longitude
+ * @returns {object} {success: boolean, location: object}
+ * @example
+ * // Request
+ * PUT /api/drivers/location
+ * {
+ *   "latitude": 40.7128,
+ *   "longitude": -74.0060
+ * }
+ * // Response
+ * {
+ *   "success": true,
+ *   "location": {
+ *     "type": "Point",
+ *     "coordinates": [-74.0060, 40.7128]
+ *   }
+ * }
+ */
 export const updateLocation = async (req, res) => {
   try {
     const { latitude, longitude } = req.body;

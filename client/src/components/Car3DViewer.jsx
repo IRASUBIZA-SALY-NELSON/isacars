@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Box, Cylinder, Sphere } from '@react-three/drei';
+import React, { useState, useRef, Suspense } from 'react';
+import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import * as THREE from 'three';
 
 // ─── COLORS ───────────────────────────────────────────────────────────────────
@@ -20,74 +20,65 @@ const C = {
   muted:    "#94a3b8",
 };
 
-// Car Model Component
-function CarModel({ position = [0, 0, 0] }) {
+// 3D Image Card Component
+function ImageCard({ imageUrl }) {
   const meshRef = useRef();
+  const texture = useLoader(THREE.TextureLoader, imageUrl);
+
+  // Auto-rotate the card
+  useFrame((state, delta) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += delta * 0.3;
+    }
+  });
 
   return (
-    <group position={position} ref={meshRef}>
-      {/* Car Body */}
-      <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
-        <boxGeometry args={[4, 1, 2]} />
-        <meshStandardMaterial color={C.green} metalness={0.8} roughness={0.2} />
+    <group>
+      {/* Main image plane */}
+      <mesh ref={meshRef} position={[0, 0, 0]}>
+        <planeGeometry args={[4, 2.5]} />
+        <meshStandardMaterial
+          map={texture}
+          side={THREE.DoubleSide}
+          metalness={0.1}
+          roughness={0.3}
+        />
       </mesh>
 
-      {/* Car Roof */}
-      <mesh position={[0, 1.2, 0]} castShadow receiveShadow>
-        <boxGeometry args={[3, 0.8, 1.8]} />
-        <meshStandardMaterial color={C.greenDk} metalness={0.8} roughness={0.2} />
+      {/* Frame/Border */}
+      <mesh position={[0, 0, -0.05]}>
+        <planeGeometry args={[4.2, 2.7]} />
+        <meshStandardMaterial
+          color="#1a1a1a"
+          metalness={0.8}
+          roughness={0.2}
+        />
       </mesh>
 
-      {/* Windows */}
-      <mesh position={[0, 1.3, 0.3]} castShadow receiveShadow>
-        <boxGeometry args={[2.5, 0.6, 1.5]} />
-        <meshStandardMaterial color="#1a1a1a" metalness={0.9} roughness={0.1} opacity={0.7} transparent />
-      </mesh>
-
-      {/* Wheels */}
-      <mesh position={[1.2, -0.3, 1]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.3, 0.3, 0.2, 32]} />
-        <meshStandardMaterial color="#2a2a2a" metalness={0.7} roughness={0.3} />
-      </mesh>
-      <mesh position={[1.2, -0.3, -1]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.3, 0.3, 0.2, 32]} />
-        <meshStandardMaterial color="#2a2a2a" metalness={0.7} roughness={0.3} />
-      </mesh>
-      <mesh position={[-1.2, -0.3, 1]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.3, 0.3, 0.2, 32]} />
-        <meshStandardMaterial color="#2a2a2a" metalness={0.7} roughness={0.3} />
-      </mesh>
-      <mesh position={[-1.2, -0.3, -1]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.3, 0.3, 0.2, 32]} />
-        <meshStandardMaterial color="#2a2a2a" metalness={0.7} roughness={0.3} />
-      </mesh>
-
-      {/* Headlights */}
-      <mesh position={[2, 0.5, 0.5]} castShadow receiveShadow>
-        <sphereGeometry args={[0.15, 16, 16]} />
-        <meshStandardMaterial color="#ffffcc" emissive="#ffffcc" emissiveIntensity={0.5} />
-      </mesh>
-      <mesh position={[2, 0.5, -0.5]} castShadow receiveShadow>
-        <sphereGeometry args={[0.15, 16, 16]} />
-        <meshStandardMaterial color="#ffffcc" emissive="#ffffcc" emissiveIntensity={0.5} />
-      </mesh>
-
-      {/* Taillights */}
-      <mesh position={[-2, 0.5, 0.5]} castShadow receiveShadow>
-        <sphereGeometry args={[0.12, 16, 16]} />
-        <meshStandardMaterial color="#ff3333" emissive="#ff3333" emissiveIntensity={0.3} />
-      </mesh>
-      <mesh position={[-2, 0.5, -0.5]} castShadow receiveShadow>
-        <sphereGeometry args={[0.12, 16, 16]} />
-        <meshStandardMaterial color="#ff3333" emissive="#ff3333" emissiveIntensity={0.3} />
-      </mesh>
+      {/* Spotlight on the image */}
+      <spotLight
+        position={[0, 3, 5]}
+        angle={0.5}
+        penumbra={0.5}
+        intensity={1}
+        castShadow
+      />
     </group>
+  );
+}
+
+// Fallback component while loading
+function LoadingFallback() {
+  return (
+    <mesh>
+      <boxGeometry args={[4, 2.5, 0.1]} />
+      <meshStandardMaterial color={C.muted} />
+    </mesh>
   );
 }
 
 function Car3DViewer({ carImage = '/taxi.jpeg' }) {
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   return (
     <div style={{
@@ -96,39 +87,38 @@ function Car3DViewer({ carImage = '/taxi.jpeg' }) {
       position: 'relative',
       borderRadius: '16px',
       overflow: 'hidden',
-      background: `linear-gradient(135deg, ${C.card} 0%, ${C.bg} 100%)`,
+      background: `linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)`,
       border: `1px solid ${C.border}`,
       boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
       marginBottom: '32px'
     }}>
       {/* 3D Canvas */}
       <Canvas
-        camera={{ position: [5, 3, 5], fov: 50 }}
         style={{ width: '100%', height: '100%' }}
         onCreated={() => setIsLoading(false)}
       >
+        <PerspectiveCamera makeDefault position={[0, 0, 6]} fov={50} />
+
         {/* Lighting */}
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 10, 5]} intensity={1} castShadow />
-        <pointLight position={[-10, -10, -5]} intensity={0.5} />
+        <ambientLight intensity={0.4} />
+        <directionalLight position={[5, 5, 5]} intensity={0.8} />
+        <pointLight position={[-5, -5, -5]} intensity={0.3} color="#4a9eff" />
+        <pointLight position={[5, -5, 5]} intensity={0.3} color="#ff4a9e" />
 
-        {/* 3D Car Model */}
-        <CarModel position={[0, 0, 0]} />
+        {/* 3D Image Card with Suspense for loading */}
+        <Suspense fallback={<LoadingFallback />}>
+          <ImageCard imageUrl={carImage} />
+        </Suspense>
 
-        {/* Ground Plane */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]} receiveShadow>
-          <planeGeometry args={[20, 20]} />
-          <meshStandardMaterial color={C.bg} opacity={0.5} transparent />
-        </mesh>
-
-        {/* Orbit Controls for rotation */}
+        {/* Interactive Controls */}
         <OrbitControls
           enablePan={false}
           enableZoom={true}
-          minDistance={3}
+          minDistance={4}
           maxDistance={10}
-          autoRotate={true}
-          autoRotateSpeed={1}
+          autoRotate={false}
+          enableDamping={true}
+          dampingFactor={0.05}
         />
       </Canvas>
 
@@ -142,17 +132,20 @@ function Car3DViewer({ carImage = '/taxi.jpeg' }) {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '12px'
+          gap: '12px',
+          pointerEvents: 'none'
         }}>
           <div style={{
             width: '40px',
             height: '40px',
-            border: `3px solid ${C.border}`,
+            border: `3px solid rgba(255,255,255,0.2)`,
             borderTop: `3px solid ${C.green}`,
             borderRadius: '50%',
             animation: 'spin 1s linear infinite'
           }} />
-          <div style={{ color: C.muted, fontSize: '14px' }}>Loading 3D Model...</div>
+          <div style={{ color: '#fff', fontSize: '14px', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+            Loading 3D view...
+          </div>
         </div>
       )}
 
@@ -166,28 +159,30 @@ function Car3DViewer({ carImage = '/taxi.jpeg' }) {
         padding: '8px 12px',
         borderRadius: '8px',
         fontSize: '12px',
-        backdropFilter: 'blur(4px)'
+        backdropFilter: 'blur(4px)',
+        border: '1px solid rgba(255,255,255,0.1)'
       }}>
         🖱️ Drag to rotate • Scroll to zoom
       </div>
 
-      {/* Car Badge */}
+      {/* Vehicle Badge */}
       <div style={{
         position: 'absolute',
         top: '12px',
         right: '12px',
         background: C.green,
         color: '#fff',
-        padding: '4px 12px',
+        padding: '6px 14px',
         borderRadius: '16px',
         fontSize: '12px',
         fontWeight: '600',
-        boxShadow: `0 2px 8px ${C.green}40`
+        boxShadow: `0 2px 8px ${C.green}60`,
+        border: '1px solid rgba(255,255,255,0.2)'
       }}>
-        3D VIEW
+        🚗 3D VEHICLE VIEW
       </div>
 
-      {/* CSS Animation */}
+      {/* CSS Animations */}
       <style>{`
         @keyframes spin {
           0% { transform: rotate(0deg); }

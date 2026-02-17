@@ -7,6 +7,8 @@ import compression from 'compression';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import connectDB from './config/database.js';
+import { specs } from './config/swagger.js';
+import swaggerUi from 'swagger-ui-express';
 
 // Load env vars
 dotenv.config();
@@ -53,10 +55,24 @@ if (process.env.NODE_ENV === 'development') {
 // Compression
 app.use(compression());
 
+// API Documentation
+// Serve Swagger UI
+app.use('/api-docs', swaggerUi(specs, {
+  explorer: true,
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'ISACARS API Documentation'
+}));
+
+// Serve Swagger JSON spec
+app.get('/api-docs.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(specs);
+});
+
 // Mount routers
 app.use('/api/auth', authRoutes);
-app.use('/api/rides', rideRoutes);
 app.use('/api/drivers', driverRoutes);
+app.use('/api/rides', rideRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

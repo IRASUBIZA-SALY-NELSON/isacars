@@ -15,9 +15,38 @@ const generateToken = (id) => {
   });
 };
 
-// @desc    Register user
-// @route   POST /api/auth/register
-// @access  Public
+/**
+ * @desc    Register a new user
+ * @route   POST /api/auth/register
+ * @access  Public
+ * @param   {string} name - User full name
+ * @param   {string} email - User email address
+ * @param   {string} phone - User phone number
+ * @param   {string} password - User password
+ * @param   {string} [role] - User role (passenger, driver, admin)
+ * @returns {object} {success: boolean, token: string, user: object}
+ * @example
+ * // Request
+ * POST /api/auth/register
+ * {
+ *   "name": "John Doe",
+ *   "email": "john@example.com",
+ *   "phone": "+1234567890",
+ *   "password": "password123",
+ *   "role": "passenger"
+ * }
+ * // Response
+ * {
+ *   "success": true,
+ *   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+ *   "user": {
+ *     "id": "64a7b8c9f1e2d3a4b5c6d",
+ *     "name": "John Doe",
+ *     "email": "john@example.com",
+ *     "role": "passenger"
+ *   }
+ * }
+ */
 export const register = async (req, res) => {
   try {
     const { name, email, phone, password, role } = req.body;
@@ -66,6 +95,32 @@ export const register = async (req, res) => {
 // @desc    Login user
 // @route   POST /api/auth/login
 // @access  Public
+/**
+ * @desc    Login user
+ * @route   POST /api/auth/login
+ * @access  Public
+ * @param   {string} email - User email or phone
+ * @param   {string} password - User password
+ * @returns {object} {success: boolean, token: string, user: object}
+ * @example
+ * // Request
+ * POST /api/auth/login
+ * {
+ *   "email": "john@example.com",
+ *   "password": "password123"
+ * }
+ * // Response
+ * {
+ *   "success": true,
+ *   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+ *   "user": {
+ *     "id": "64a7b8c9f1e2d3a4b5c6d",
+ *     "name": "John Doe",
+ *     "email": "john@example.com",
+ *     "role": "passenger"
+ *   }
+ * }
+ */
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;

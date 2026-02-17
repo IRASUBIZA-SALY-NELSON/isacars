@@ -1,7 +1,13 @@
 import Ride from '../models/Ride.js';
 import User from '../models/User.js';
 
-// Fare calculation based on distance and vehicle type
+/**
+ * Calculate fare based on distance, duration, and vehicle type
+ * @param {number} distance - Distance in kilometers
+ * @param {string} vehicleType - Type of vehicle (economy, premium, suv, bike)
+ * @param {number} duration - Duration in minutes
+ * @returns {object} Fare breakdown with total amount
+ */
 const calculateFare = (distance, vehicleType, duration) => {
   const baseFares = {
     economy: 3,
@@ -35,6 +41,39 @@ const calculateFare = (distance, vehicleType, duration) => {
 // @desc    Create a new ride request
 // @route   POST /api/rides
 // @access  Private (Passenger)
+/**
+ * @desc    Create a new ride request
+ * @route   POST /api/rides
+ * @access  Private (Passenger)
+ * @param   {string} pickupLocation - Pickup address
+ * @param   {string} dropoffLocation - Destination address
+ * @param   {string} vehicleType - Vehicle type (economy, premium, suv, bike)
+ * @param   {number} distance - Distance in kilometers
+ * @param   {number} duration - Duration in minutes
+ * @param   {string} [paymentMethod] - Payment method (cash, card, wallet)
+ * @returns {object} {success: boolean, ride: object}
+ * @example
+ * // Request
+ * POST /api/rides
+ * {
+ *   "pickupLocation": "123 Main St, City",
+ *   "dropoffLocation": "456 Oak Ave, City",
+ *   "vehicleType": "economy",
+ *   "distance": 5.2,
+ *   "duration": 15,
+ *   "paymentMethod": "card"
+ * }
+ * // Response
+ * {
+ *   "success": true,
+ *   "ride": {
+ *     "_id": "64a7b8c9f1e2d3a4b5c6d",
+ *     "status": "pending",
+ *     "fare": {"total": 15.50, "baseFare": 3, "distanceFare": 7.80, "timeFare": 3.75},
+ *     "passenger": {"name": "John Doe", "phone": "+1234567890"}
+ *   }
+ * }
+ */
 export const createRide = async (req, res) => {
   try {
     const {

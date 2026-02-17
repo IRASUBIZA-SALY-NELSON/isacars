@@ -647,4 +647,32 @@
     font-size: 14px;
   }
 }
+
+/* Car Drive-In Animation */
+.car-image-container.car-initial {
+  transform: translateX(-120%);
+  opacity: 0;
+}
+
+.car-image-container.car-drive-in {
+  animation: driveIn 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes driveIn {
+  0% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(2%);
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(-1%);
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
 }

@@ -20,6 +20,7 @@ const SplitAuth = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [showCarModal, setShowCarModal] = useState(false);
   const [sparkleAnimation, setSparkleAnimation] = useState(false);
+  const [carAnimated, setCarAnimated] = useState(false);
 
   const inputRef = useRef(null);
 
@@ -41,6 +42,14 @@ const SplitAuth = () => {
       window.removeEventListener('resize', checkMobile);
       clearInterval(sparkleInterval);
     };
+  }, []);
+
+  // Trigger car drive-in animation on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCarAnimated(true);
+    }, 300);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -193,7 +202,7 @@ const SplitAuth = () => {
       {/* Left Side - Car Image */}
       <div className="auth-left">
         <div className="car-showcase">
-          <div className="car-image-container">
+          <div className={`car-image-container ${carAnimated ? 'car-drive-in' : 'car-initial'}`}>
             <img
               src="https://images.unsplash.com/photo-1550355291-bbee04a92027?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
               alt="Premium Car"
