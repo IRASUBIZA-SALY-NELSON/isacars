@@ -20,12 +20,12 @@ const options = {
     },
     servers: [
       {
-        url: process.env.NODE_ENV === 'production'
-          ? 'https://isacars-backend.onrender.com'
-          : 'http://localhost:5000',
-        description: process.env.NODE_ENV === 'production'
-          ? 'Production server'
-          : 'Development server'
+        url: 'https://isacars.onrender.com',
+        description: 'Production server'
+      },
+      {
+        url: 'http://localhost:5000',
+        description: 'Development server'
       }
     ]
   },

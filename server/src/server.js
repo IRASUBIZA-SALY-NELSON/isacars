@@ -57,7 +57,8 @@ app.use(compression());
 
 // API Documentation
 // Serve Swagger UI
-app.use('/api-docs', swaggerUi(specs, {
+app.use('/api-docs', swaggerUi.serve);
+app.get('/api-docs', swaggerUi.setup(specs, {
   explorer: true,
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'ISACARS API Documentation'
