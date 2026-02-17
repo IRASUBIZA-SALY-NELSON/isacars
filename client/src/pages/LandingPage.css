@@ -758,11 +758,81 @@
 }
 
 
-@media (max-width: 480px) {
+  @media (max-width: 480px) {
   .floating-contact-btn {
     bottom: 20px;
     right: 20px;
     width: 60px;
     height: 60px;
   }
+}
+
+/* Contact Modal Interactivity */
+.contact-item-link {
+  text-decoration: none;
+  display: block;
+  color: inherit;
+  transition: transform 0.2s;
+}
+
+.contact-item-link:hover {
+  transform: translateY(-2px);
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s;
+}
+
+.back-btn:hover {
+  color: #111827;
+}
+
+.message-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+.message-textarea {
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  border: 2px solid #e5e7eb;
+  font-size: 1rem;
+  font-family: inherit;
+  background: #f9fafb;
+  resize: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  color: #1f2937;
+  box-sizing: border-box; /* Important for width: 100% */
+}
+
+.message-textarea::placeholder {
+  color: #9ca3af;
+}
+
+.message-textarea:focus {
+  border-color: var(--color-success);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(0, 200, 83, 0.1);
 }

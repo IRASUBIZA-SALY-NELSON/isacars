@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Car, MapPin, CreditCard, Star, Shield, Clock, Phone, Mail, X, MessageSquare, ArrowRight } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 import './LandingPage.css';
 
 const LandingPage = () => {
@@ -8,7 +9,18 @@ const LandingPage = () => {
   const [selectedCar, setSelectedCar] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [isMessageView, setIsMessageView] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+
+  const handleMessageSubmit = (e) => {
+    e.preventDefault();
+    // In a real app, you would send this data to a backend
+    toast.success('You have successfully submitted your message!');
+    setTimeout(() => {
+      setIsContactModalOpen(false);
+      setIsMessageView(false);
+    }, 2000);
+  };
 
   const heroImages = [
     '/8a.jpg',
@@ -455,59 +467,101 @@ const LandingPage = () => {
 
       {/* Contact Us Modal */}
       {isContactModalOpen && (
-        <div className="contact-modal-overlay" onClick={() => setIsContactModalOpen(false)}>
+        <div className="contact-modal-overlay" onClick={() => {
+          setIsContactModalOpen(false);
+          setIsMessageView(false);
+        }}>
           <div className="contact-modal-content" onClick={e => e.stopPropagation()}>
-            <button className="contact-modal-close" onClick={() => setIsContactModalOpen(false)}>
+            <button className="contact-modal-close" onClick={() => {
+              setIsContactModalOpen(false);
+              setIsMessageView(false);
+            }}>
               <X size={20} />
             </button>
-            <div className="contact-modal-header">
-              <h2>Contact Us</h2>
-            </div>
-            <div className="contact-modal-body">
-              <div className="contact-item">
-                <div className="contact-icon-wrapper call">
-                  <Phone size={20} />
-                </div>
-                <div className="contact-text">
-                  <span className="contact-label">Call us</span>
-                  <span className="contact-value">+250 781 944 664</span>
-                </div>
-              </div>
 
-              <div className="contact-item">
-                <div className="contact-icon-wrapper email">
-                  <Mail size={20} />
+            {!isMessageView ? (
+              <>
+                <div className="contact-modal-header">
+                  <h2>Contact Us</h2>
                 </div>
-                <div className="contact-text">
-                  <span className="contact-label">Email us</span>
-                  <span className="contact-value">info@isacars.rw</span>
-                </div>
-              </div>
+                <div className="contact-modal-body">
+                  <a href="tel:+250781944664" className="contact-item-link">
+                    <div className="contact-item">
+                      <div className="contact-icon-wrapper call">
+                        <Phone size={20} />
+                      </div>
+                      <div className="contact-text">
+                        <span className="contact-label">Call us</span>
+                        <span className="contact-value">+250 781 944 664</span>
+                      </div>
+                    </div>
+                  </a>
 
-              <div className="contact-item">
-                <div className="contact-icon-wrapper location">
-                  <MapPin size={20} />
-                </div>
-                <div className="contact-text">
-                  <span className="contact-label">Visit us</span>
-                  <span className="contact-value">Gisenyi, Rwanda</span>
-                </div>
-              </div>
+                  <a href="mailto:info@isacars.rw?subject=Inquiry about Isacars" className="contact-item-link">
+                    <div className="contact-item">
+                      <div className="contact-icon-wrapper email">
+                        <Mail size={20} />
+                      </div>
+                      <div className="contact-text">
+                        <span className="contact-label">Email us</span>
+                        <span className="contact-value">info@isacars.rw</span>
+                      </div>
+                    </div>
+                  </a>
 
-              <div className="contact-divider">
-                <span>or</span>
-              </div>
+                  <div className="contact-item">
+                    <div className="contact-icon-wrapper location">
+                      <MapPin size={20} />
+                    </div>
+                    <div className="contact-text">
+                      <span className="contact-label">Visit us</span>
+                      <span className="contact-value">Gisenyi, Rwanda</span>
+                    </div>
+                  </div>
 
-              <button className="contact-submit-btn">
-                Send us a message <ArrowRight size={18} />
-              </button>
-            </div>
-            <div className="contact-modal-footer">
-              <span>Powered by SALES Team</span>
-            </div>
+                  <div className="contact-divider">
+                    <span>or</span>
+                  </div>
+
+                  <button className="contact-submit-btn" onClick={() => setIsMessageView(true)}>
+                    Send us a message <ArrowRight size={18} />
+                  </button>
+                </div>
+                <div className="contact-modal-footer">
+                  <span>Powered by SALES Team</span>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="contact-modal-header">
+                  <button className="back-btn" onClick={() => setIsMessageView(false)}>
+                    ← Back
+                  </button>
+                  <h2>Send Message</h2>
+                </div>
+                <div className="contact-modal-body">
+                  <form onSubmit={handleMessageSubmit} className="message-form">
+                    <div className="form-group">
+                      <label htmlFor="message">How can we help you?</label>
+                      <textarea
+                        id="message"
+                        rows="4"
+                        placeholder="Type your message here..."
+                        required
+                        className="message-textarea"
+                      ></textarea>
+                    </div>
+                    <button type="submit" className="contact-submit-btn">
+                      Send Message <ArrowRight size={18} />
+                    </button>
+                  </form>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
+      <Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 };
