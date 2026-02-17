@@ -43,7 +43,7 @@ const C = {
 // ─── SVG ICONS ────────────────────────────────────────────────────────────────
 const Icon = ({ name, size = 18, color = "currentColor" }) => {
   const p = { fill: "none", stroke: color, strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round" };
-  const w = { width: size, height: size, display: "inline-block", verticalAlign: "middle", flexShrink: 0 };
+  const w = { width: size, height: size, display: "inline-block", verticalalign: "middle", flexshrink: 0 };
   const icons = {
     grid:      <svg {...w} viewBox="0 0 24 24" {...p}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>,
     map:       <svg {...w} viewBox="0 0 24 24" {...p}><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>,
@@ -81,7 +81,7 @@ const DriverDashboard = () => {
   const SidebarContent = () => (
     <div style={{display:"flex",flexDirection:"column",height:"100%"}}>
       {/* Logo */}
-      <div style={{display:"flex",alignItems:"center",gap:12,padding:"18px 16px",borderBottom:"1px solid rgba(255,255,255,0.1)",flexShrink:0}}>
+      <div style={{display:"flex",alignItems:"center",gap:12,padding:"18px 16px",borderBottom:"1px solid rgba(255,255,255,0.1)",flexshrink:0}}>
         <div style={{width:38,height:38,borderRadius:10,background:C.green,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`0 0 16px ${C.green}60`}}>
           <Icon name="car" size={19} color="#fff"/>
         </div>
@@ -97,7 +97,7 @@ const DriverDashboard = () => {
       {!collapsed && (
         <div style={{
           margin:"0 8px 8px",padding:"14px 16px",background:"rgba(255,255,255,0.06)",
-          borderRadius:12,border:"1px solid rgba(255,255,255,0.09)",flexShrink:0
+          borderRadius:12,border:"1px solid rgba(255,255,255,0.09)",flexshrink:0
         }}>
           <div style={{fontSize:10,fontWeight:800,color:"rgba(255,255,255,0.35)",letterSpacing:1.5,marginBottom:10}}>DRIVER PROFILE</div>
 
@@ -128,7 +128,7 @@ const DriverDashboard = () => {
               <div style={{
                 width:6,height:6,borderRadius:"50%",
                 background:isAvailable?C.green:"#bdc3c7",
-                boxShadow:isAvailable?`0 0 5px ${C.green}`:"none"
+                boxShadow:isAvailable?`0 0 5px ${C.green}40`:"none"
               }}/>
               {isAvailable ? 'Online' : 'Offline'}
             </button>
@@ -385,7 +385,7 @@ const DriverDashboard = () => {
                 <span style={{position:"absolute",top:-3,right:-3,width:16,height:16,borderRadius:"50%",background:"#ef4444",fontSize:9,fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center"}}>{pendingRequests.length}</span>
               )}
             </div>
-            <div style={{width:36,height:36,borderRadius:"50%",background:`linear-gradient(135deg,${C.greenDk},${C.green})`,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:13,color:"#fff",boxShadow:`0 0 10px ${C.green}40`,flexShrink:0}}>{user?.name?.charAt(0).toUpperCase() || 'D'}</div>
+            <div style={{width:36,height:36,borderRadius:"50%",background:`linear-gradient(135deg,${C.greenDk},${C.green})`,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:13,color:"#fff",boxShadow:`0 0 10px ${C.green}40`,flexshrink:0}}>{user?.name?.charAt(0).toUpperCase() || 'D'}</div>
           </div>
         </header>
 
