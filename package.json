@@ -9,7 +9,7 @@
     "start-client": "cd client && npm run dev",
     "build-client": "cd client && npm run build",
     "build": "cd server && npm install && cd ../client && npm install && npm run build",
-    "start": "cd server && npm start"
+    "start": "cd server && npm install && npm start"
   },
   "keywords": ["isacars", "taxi", "ride-hailing", "react", "nodejs"],
   "author": "",
