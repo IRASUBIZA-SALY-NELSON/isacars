@@ -89,17 +89,22 @@ const ImmersiveAuth = () => {
     setIsLoading(true);
 
     try {
+      let result;
       if (isLogin) {
-        await login(formData.email, formData.password);
-        toast.success('Welcome back to ISACARS!');
-        navigate('/passenger/dashboard');
+        result = await login(formData.email, formData.password);
       } else {
-        await register({ ...formData, role: 'passenger' });
-        toast.success('Welcome to ISACARS!');
-        navigate('/passenger/dashboard');
+        result = await register({ ...formData, role: 'passenger' });
+      }
+
+      if (result.success) {
+        toast.success(isLogin ? 'Welcome back to ISACARS!' : 'Welcome to ISACARS!');
+        // Redirect based on role
+        navigate(`/${result.user.role}/dashboard`);
+      } else {
+        toast.error(result.message || 'Authentication failed');
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Authentication failed');
+      toast.error('An unexpected error occurred');
     } finally {
       setIsLoading(false);
     }
@@ -132,9 +137,9 @@ const ImmersiveAuth = () => {
 
       if (result.success) {
         toast.success('Welcome to ISACARS!');
-        navigate('/passenger/dashboard');
+        navigate(`/${result.user.role}/dashboard`);
       } else {
-        throw new Error(result.message);
+        toast.error(result.message || 'Google authentication failed');
       }
     } catch (error) {
       console.error('Google auth error:', error);
