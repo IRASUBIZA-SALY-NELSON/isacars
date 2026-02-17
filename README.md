@@ -6,6 +6,7 @@ A comprehensive, feature-rich Uber clone built with React.js and Node.js. This a
 
 ### 🚕 Passenger App
 - ✅ User Registration & Authentication
+- ✅ **Google OAuth Sign-In**
 - ✅ Real-time Ride Booking
 - ✅ Multiple Vehicle Types (Economy, Premium, SUV, Bike)
 - ✅ Fare Estimation

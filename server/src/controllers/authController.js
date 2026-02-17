@@ -1,5 +1,12 @@
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
 import User from '../models/User.js';
+
+// Initialize Google OAuth Client
+const googleClient = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET
+);
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -159,6 +166,74 @@ export const updateProfile = async (req, res) => {
     res.status(500).json({
       success: false,
       message: error.message
+    });
+  }
+};
+
+// @desc    Google OAuth login
+// @route   POST /api/auth/google
+// @access  Public
+export const googleAuth = async (req, res) => {
+  try {
+    const { token, email, name, picture } = req.body;
+
+    // Verify Google token
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+
+    const payload = ticket.getPayload();
+
+    if (!payload) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid Google token'
+      });
+    }
+
+    // Check if user exists
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // Create new user from Google data
+      user = await User.create({
+        name: name || payload.name,
+        email: email || payload.email,
+        avatar: picture || payload.picture,
+        password: 'google_oauth_' + Math.random().toString(36).slice(-8),
+        role: 'passenger',
+        isGoogleAuth: true
+      });
+    } else {
+      // Update user's Google info if needed
+      if (!user.avatar) {
+        user.avatar = picture || payload.picture;
+        await user.save();
+      }
+    }
+
+    const jwtToken = generateToken(user._id);
+
+    res.status(200).json({
+      success: true,
+      token: jwtToken,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        avatar: user.avatar,
+        driverDetails: user.driverDetails,
+        passengerDetails: user.passengerDetails
+      }
+    });
+  } catch (error) {
+    console.error('Google auth error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Google authentication failed'
     });
   }
 };

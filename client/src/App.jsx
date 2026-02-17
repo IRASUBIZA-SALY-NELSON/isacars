@@ -1,15 +1,35 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { useState, useEffect } from 'react';
 import LandingPage from './pages/LandingPage';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import ImmersiveAuthPage from './pages/ImmersiveAuthPage';
+import SplitAuthPage from './pages/SplitAuthPage';
 import PassengerDashboard from './pages/PassengerDashboard';
 import DriverDashboard from './pages/DriverDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import RideHistory from './pages/RideHistory';
+import RideDetails from './pages/RideDetails';
 import WalletPayment from './pages/WalletPayment';
 import Rewards from './pages/Rewards';
+
+// Device Detection Component
+const DeviceAuthPage = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkDevice = () => {
+      setIsMobile(window.innerWidth <= 1024);
+    };
+
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
+
+  return isMobile ? <ImmersiveAuthPage /> : <SplitAuthPage />;
+};
 
 // Protected Route Component
 const ProtectedRoute = ({ children, requiredRole }) => {
@@ -99,7 +119,7 @@ function App() {
             path="/login"
             element={
               <PublicRoute>
-                <Login />
+                <DeviceAuthPage />
               </PublicRoute>
             }
           />
@@ -107,7 +127,7 @@ function App() {
             path="/register"
             element={
               <PublicRoute>
-                <Register />
+                <DeviceAuthPage />
               </PublicRoute>
             }
           />
@@ -126,6 +146,14 @@ function App() {
             element={
               <ProtectedRoute requiredRole="passenger">
                 <RideHistory />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/passenger/ride-details/:rideId"
+            element={
+              <ProtectedRoute requiredRole="passenger">
+                <RideDetails />
               </ProtectedRoute>
             }
           />
