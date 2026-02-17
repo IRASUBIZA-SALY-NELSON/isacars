@@ -12,6 +12,9 @@ import RideHistory from './pages/RideHistory';
 import RideDetails from './pages/RideDetails';
 import WalletPayment from './pages/WalletPayment';
 import Rewards from './pages/Rewards';
+import DriverEarnings from './pages/DriverEarnings';
+import DriverProfile from './pages/DriverProfile';
+import DriverVehicle from './pages/DriverVehicle';
 
 // Device Detection Component
 const DeviceAuthPage = () => {
@@ -31,10 +34,8 @@ const DeviceAuthPage = () => {
   return isMobile ? <ImmersiveAuthPage /> : <SplitAuthPage />;
 };
 
-// Protected Route Component
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, loading } = useAuth();
-
   if (loading) {
     return (
       <div style={{
@@ -180,6 +181,46 @@ function App() {
             element={
               <ProtectedRoute requiredRole="driver">
                 <DriverDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/driver/earnings"
+            element={
+              <ProtectedRoute requiredRole="driver">
+                <DriverEarnings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/driver/history"
+            element={
+              <ProtectedRoute requiredRole="driver">
+                <RideHistory />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/driver/vehicle"
+            element={
+              <ProtectedRoute requiredRole="driver">
+                <DriverVehicle />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/driver/profile"
+            element={
+              <ProtectedRoute requiredRole="driver">
+                <DriverProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/driver/ride-details/:rideId"
+            element={
+              <ProtectedRoute requiredRole="driver">
+                <RideDetails />
               </ProtectedRoute>
             }
           />

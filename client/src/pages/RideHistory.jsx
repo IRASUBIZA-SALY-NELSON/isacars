@@ -77,6 +77,14 @@ const RideHistory = () => {
   const totalRides = rides.filter(r => r.status === 'completed').length;
   const totalSpent = rides.filter(r => r.status === 'completed').reduce((sum, r) => sum + r.fare.total, 0).toFixed(2);
 
+  const handleBack = () => {
+    navigate(user?.role === 'driver' ? '/driver/dashboard' : '/passenger/dashboard');
+  };
+
+  const handleRideClick = (rideId) => {
+    navigate(`/${user?.role || 'passenger'}/ride-details/${rideId}`);
+  };
+
   if (loading) {
     return (
       <div className="ride-history-loading-container">
@@ -88,7 +96,7 @@ const RideHistory = () => {
   return (
     <div className="ride-history-new">
       <div className="history-header">
-        <button className="back-btn-round" onClick={() => navigate('/passenger/dashboard')}>
+        <button className="back-btn-round" onClick={handleBack}>
           <ArrowLeft size={20} />
         </button>
         <h1 className="history-title">Ride History</h1>
@@ -96,11 +104,11 @@ const RideHistory = () => {
         <div className="history-summary">
           <div className="summary-item">
             <span className="summary-value">{totalRides}</span>
-            <span className="summary-label">TOTAL RIDES</span>
+            <span className="summary-label">TOTAL {user?.role === 'driver' ? 'TRIPS' : 'RIDES'}</span>
           </div>
           <div className="summary-item">
             <span className="summary-value">${totalSpent}</span>
-            <span className="summary-label">TOTAL SPENT</span>
+            <span className="summary-label">TOTAL {user?.role === 'driver' ? 'EARNED' : 'SPENT'}</span>
           </div>
         </div>
       </div>
@@ -110,7 +118,7 @@ const RideHistory = () => {
           <Search size={18} className="search-icon-dim" />
           <input
             type="text"
-            placeholder="Search by location, driver name..."
+            placeholder="Search by location..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -122,7 +130,7 @@ const RideHistory = () => {
           <div
             key={ride._id}
             className={`ride-item-card ${index === 0 ? 'highlight-border' : ''}`}
-            onClick={() => navigate(`/passenger/ride-details/${ride._id}`)}
+            onClick={() => handleRideClick(ride._id)}
           >
             <div className="ride-loc-info">
               <div className="loc-row">

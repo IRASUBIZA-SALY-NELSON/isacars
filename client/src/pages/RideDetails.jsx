@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { ArrowLeft, Phone, MessageCircle, MoreVertical, CreditCard, ChevronUp } from 'lucide-react';
 import MapComponent from '../components/MapComponent';
 import api from '../utils/api';
@@ -9,6 +10,7 @@ import './RideDetails.css';
 const RideDetails = () => {
   const { rideId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [ride, setRide] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -54,6 +56,14 @@ const RideDetails = () => {
     paymentMethod: 'card'
   });
 
+  const handleBack = () => {
+     if (user?.role === 'driver') {
+         navigate('/driver/history');
+     } else {
+         navigate('/passenger/ride-history');
+     }
+  };
+
   if (loading) {
     return (
       <div className="ride-details-loading">
@@ -67,7 +77,7 @@ const RideDetails = () => {
   return (
     <div className="ride-details-page">
       <div className="details-header">
-        <button className="back-btn-round" onClick={() => navigate('/passenger/ride-history')}>
+        <button className="back-btn-round" onClick={handleBack}>
           <ArrowLeft size={20} />
         </button>
       </div>
@@ -95,7 +105,7 @@ const RideDetails = () => {
         <div className="sheet-handle"></div>
 
         <div className="status-timer">
-          <span className="status-text capitalize">Arrived in</span>
+          <span className="status-text capitalize">{ride.status.replace('_', ' ')}</span>
           <span className="timer-val">00:05:20</span>
         </div>
 
@@ -147,7 +157,7 @@ const RideDetails = () => {
         </div>
 
         <div className="fare-footer">
-          <span className="total-label">Total orders</span>
+          <span className="total-label">Total Fare</span>
           <span className="total-value">${ride.fare?.total?.toFixed(2)}</span>
         </div>
       </div>
