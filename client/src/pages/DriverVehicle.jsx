@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Car, PenTool, CheckCircle, Menu } from 'lucide-react';
 import DriverSidebar from '../components/DriverSidebar';
+import Car3DViewer from '../components/Car3DViewer';
 
 // ─── COLORS ───────────────────────────────────────────────────────────────────
 const C = {
@@ -72,6 +73,10 @@ const DriverVehicle = () => {
 
       {/* Content */}
       <main style={{flex:1,overflowY:"auto",padding:24}}>
+          {/* 3D Car Viewer */}
+          <Car3DViewer carImage="/taxi.jpeg" />
+
+          {/* Vehicle Info Card */}
           <div style={{
               borderRadius:16,
               background:C.card,
@@ -81,10 +86,9 @@ const DriverVehicle = () => {
               border:`1px solid ${C.border}`,
               boxShadow:"0 1px 4px rgba(0,0,0,0.06)"
           }}>
-              <Icon name="car" size={64} color={C.muted} style={{marginBottom:16}}/>
-              <div style={{fontSize:24,fontWeight:700,color:C.text}}>{user?.driverDetails?.vehicleModel || 'Tesla Model 3'}</div>
-              <div style={{color:C.muted,fontSize:16}}>{user?.driverDetails?.vehiclePlate || 'ABC-1234'}</div>
-              <div style={{marginTop:12,padding:"4px 12px",background:C.sidebar,color:"#fff",borderRadius:16,fontSize:12,fontWeight:600}}>
+              <div style={{fontSize:24,fontWeight:700,color:C.text,marginBottom:8}}>{user?.driverDetails?.vehicleModel || 'Tesla Model 3'}</div>
+              <div style={{color:C.muted,fontSize:16,marginBottom:12}}>{user?.driverDetails?.vehiclePlate || 'UBER-001'}</div>
+              <div style={{padding:"4px 12px",background:C.sidebar,color:"#fff",borderRadius:16,fontSize:12,fontWeight:600}}>
                  PREMIUM
               </div>
           </div>
