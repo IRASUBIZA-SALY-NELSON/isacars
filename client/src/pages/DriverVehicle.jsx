@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Car, PenTool, CheckCircle, Menu } from 'lucide-react';
@@ -39,6 +39,13 @@ const DriverVehicle = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleUpdate = (data) => {
+    console.log('Updating vehicle:', data);
+    // TODO: Connect to backend API
+    setIsModalOpen(false);
+  };
 
   return (
     <div style={{display:"flex",height:"100vh",background:C.bg,color:C.text,fontFamily:"'Segoe UI',system-ui,sans-serif",overflow:"hidden"}}>
@@ -101,7 +108,7 @@ const DriverVehicle = () => {
               <VehicleItem label="Insurance" value="Valid until Dec 2026" status="active" />
           </div>
 
-          <button style={{
+          <button onClick={() => setIsModalOpen(true)} style={{
               width:"100%",
               background:C.green,
               color:"#fff",
@@ -122,7 +129,156 @@ const DriverVehicle = () => {
           </button>
       </main>
     </div>
+      <UpdateVehicleModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        currentData={user?.driverDetails}
+        onSubmit={handleUpdate}
+      />
     </div>
+  );
+};
+
+// ─── HELPER COMPONENTS ────────────────────────────────────────────────────────
+const Modal = ({ isOpen, onClose, title, children }) => {
+  if (!isOpen) return null;
+  return (
+    <div style={{
+      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+      background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center',
+      justifyContent: 'center', zIndex: 1000,
+      backdropFilter: 'blur(4px)'
+    }} onClick={onClose}>
+      <div style={{
+        background: C.panel, borderRadius: 16, padding: 24,
+        width: '90%', maxWidth: 500, maxHeight: '85vh', overflowY: 'auto',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
+        animation: 'slideUp 0.3s ease-out'
+      }} onClick={e => e.stopPropagation()}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+          <div style={{ fontSize: 18, fontWeight: 700, color: C.text }}>{title}</div>
+          <button onClick={onClose} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: C.muted }}>✕</button>
+        </div>
+        {children}
+        <style>{`
+          @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+          }
+        `}</style>
+      </div>
+    </div>
+  );
+};
+
+const FormField = ({ label, type = "text", value, onChange, placeholder, required, options }) => {
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: C.textSoft, marginBottom: 6 }}>
+        {label} {required && <span style={{ color: '#ef4444' }}>*</span>}
+      </label>
+      {type === 'select' ? (
+        <select
+          value={value}
+          onChange={onChange}
+          required={required}
+          style={{
+            width: '100%', padding: '10px 12px', border: `1px solid ${C.border}`,
+            borderRadius: 8, fontSize: 14, background: C.card, color: C.text,
+            outline: 'none', transition: 'border-color 0.2s'
+          }}
+          onFocus={e => e.target.style.borderColor = C.green}
+          onBlur={e => e.target.style.borderColor = C.border}
+        >
+          <option value="">Select {label}</option>
+          {options?.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      ) : (
+        <input
+          type={type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          required={required}
+          style={{
+            width: '100%', padding: '10px 12px', border: `1px solid ${C.border}`,
+            borderRadius: 8, fontSize: 14, background: C.card, color: C.text,
+            outline: 'none', transition: 'border-color 0.2s',
+            boxSizing: 'border-box'
+          }}
+          onFocus={e => e.target.style.borderColor = C.green}
+          onBlur={e => e.target.style.borderColor = C.border}
+        />
+      )}
+    </div>
+  );
+};
+
+const UpdateVehicleModal = ({ isOpen, onClose, currentData, onSubmit }) => {
+  const [formData, setFormData] = useState({
+    model: currentData?.vehicleModel || '',
+    plate: currentData?.vehiclePlate || '',
+    color: currentData?.vehicleColor || '',
+    year: currentData?.vehicleYear || '',
+  });
+
+  useEffect(() => {
+    if (currentData) {
+      setFormData({
+        model: currentData.vehicleModel || '',
+        plate: currentData.vehiclePlate || '',
+        color: currentData.vehicleColor || '',
+        year: currentData.vehicleYear || '',
+      });
+    }
+  }, [currentData]);
+
+  const handleChange = (field) => (e) => {
+    setFormData(prev => ({ ...prev, [field]: e.target.value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} title="Update Vehicle Details">
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: 20, padding: 12, background: 'rgba(34,197,94,0.1)', borderRadius: 8, fontSize: 12, color: '#166534' }}>
+          Note: Changing vehicle plate or model will require re-verification by admin.
+        </div>
+
+        <FormField label="Vehicle Model" value={formData.model} onChange={handleChange('model')} placeholder="e.g. Toyota Camry" required />
+        <FormField label="License Plate" value={formData.plate} onChange={handleChange('plate')} placeholder="e.g. ABC 123" required />
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <FormField label="Color" value={formData.color} onChange={handleChange('color')} placeholder="e.g. Silver" required />
+          <FormField label="Year" type="number" value={formData.year} onChange={handleChange('year')} placeholder="e.g. 2023" required />
+        </div>
+
+        <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
+          <button type="submit" style={{
+            flex: 1, background: C.green, color: '#fff', border: 'none',
+            padding: '12px 24px', borderRadius: 8, fontSize: 14, fontWeight: 600,
+            cursor: 'pointer', transition: 'background 0.2s'
+          }} onMouseEnter={e => e.target.style.background = C.greenDk}
+            onMouseLeave={e => e.target.style.background = C.green}>
+            Submit Update
+          </button>
+          <button type="button" onClick={onClose} style={{
+            flex: 1, background: C.card, color: C.text, border: `1px solid ${C.border}`,
+            padding: '12px 24px', borderRadius: 8, fontSize: 14, fontWeight: 600,
+            cursor: 'pointer', transition: 'background 0.2s'
+          }} onMouseEnter={e => e.target.style.background = C.bg}
+            onMouseLeave={e => e.target.style.background = C.card}>
+            Cancel
+          </button>
+        </div>
+      </form>
+    </Modal>
   );
 };
 

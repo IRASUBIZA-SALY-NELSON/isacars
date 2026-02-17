@@ -658,7 +658,6 @@ const AddVehicleModal = ({ isOpen, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Adding vehicle:', formData);
-    // TODO: API call to add vehicle
     onClose();
   };
 
