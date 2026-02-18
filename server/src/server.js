@@ -66,6 +66,15 @@ app.get('/api-docs.json', (req, res) => {
   res.send(specs);
 });
 
+// Handle preflight requests
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(200);
+});
+
 // Mount routers
 app.use('/api/auth', authRoutes);
 app.use('/api/drivers', driverRoutes);
