@@ -82,6 +82,8 @@ app.options('*', (req, res) => {
   const origin = req.headers.origin;
   const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw', 'https://novatransport.vercel.app/'];
 
+  console.log(`CORS OPTIONS request from origin: ${origin} at ${new Date().toISOString()}`);
+
   if (allowedOrigins.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
   } else {
