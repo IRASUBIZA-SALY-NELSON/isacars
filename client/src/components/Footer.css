@@ -6,6 +6,7 @@
   position: relative;
   overflow: hidden;
 }
+/* this are hte omments  */
 
 .footer-container::before {
   content: '';
@@ -14,10 +15,10 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    #10b981 20%, 
-    #10b981 80%, 
+  background: linear-gradient(90deg,
+    transparent 0%,
+    #10b981 20%,
+    #10b981 80%,
     transparent 100%);
 }
 
@@ -252,7 +253,7 @@
     grid-template-columns: 1fr 1fr 1fr;
     gap: 30px;
   }
-  
+
   .footer-logo-section {
     grid-column: 1 / -1;
   }
@@ -263,29 +264,29 @@
     grid-template-columns: 1fr 1fr;
     gap: 25px;
   }
-  
+
   .footer-logo-section {
     grid-column: 1 / -1;
     text-align: center;
   }
-  
+
   .footer-logo {
     justify-content: center;
   }
-  
+
   .footer-description {
     max-width: 100%;
   }
-  
+
   .social-links {
     justify-content: center;
   }
-  
+
   .footer-bottom {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .footer-bottom-links {
     justify-content: center;
     flex-wrap: wrap;
@@ -297,15 +298,15 @@
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .footer-section h3 {
     font-size: 15px;
   }
-  
+
   .footer-links a {
     font-size: 13px;
   }
-  
+
   .footer-copyright,
   .footer-bottom-links a {
     font-size: 12px;
