@@ -81,9 +81,10 @@ app.get('/api-docs.json', (req, res) => {
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
-    version: '1.0.1',
+    version: '1.0.1-DEPLOYED',
     timestamp: new Date().toISOString(),
-    cors: 'FIXED'
+    cors: 'FIXED-FINAL',
+    message: 'DEPLOYMENT FORCED'
   });
 });
 
