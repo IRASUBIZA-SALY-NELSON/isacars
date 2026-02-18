@@ -501,11 +501,11 @@ const LandingPage = () => {
                   </a>
 
                   <a href="mailto:info@novatransport.rw?subject=Inquiry about Nova Transport" className="contact-item-link">
-                    <div className="contact-item-card">
-                      <div className="contact-icon-wrapper">
-                        <Mail className="contact-icon" />
+                    <div className="contact-item">
+                      <div className="contact-icon-wrapper email">
+                        <Mail size={20} />
                       </div>
-                      <div className="contact-details">
+                      <div className="contact-text">
                         <span className="contact-label">Email Us</span>
                         <span className="contact-value">info@novatransport.rw</span>
                       </div>
