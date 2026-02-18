@@ -11,7 +11,7 @@ const options = {
       contact: {
         name: 'Nova Transport Support',
         email: 'info@novatransport.rw',
-        url: 'https://novatransport.rw'
+        url: 'https://isacars.onrender.com',
       },
       license: {
         name: 'MIT',
