@@ -77,6 +77,16 @@ app.get('/api-docs.json', (req, res) => {
   res.send(specs);
 });
 
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'OK',
+    version: '1.0.1',
+    timestamp: new Date().toISOString(),
+    cors: 'FIXED'
+  });
+});
+
 // Handle preflight requests
 app.options('*', (req, res) => {
   const origin = req.headers.origin;
