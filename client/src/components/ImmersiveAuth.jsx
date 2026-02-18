@@ -17,28 +17,17 @@ const ImmersiveAuth = () => {
   });
   const [errors, setErrors] = useState({});
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
 
   const inputRef = useRef(null);
 
   useEffect(() => {
-    // Check if mobile
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
     // Auto-rotate features
     const featureInterval = setInterval(() => {
       setActiveFeature((prev) => (prev + 1) % 4);
     }, 3000);
 
-    return () => {
-      window.removeEventListener('resize', checkMobile);
-      clearInterval(featureInterval);
-    };
+    return () => clearInterval(featureInterval);
   }, []);
 
   useEffect(() => {

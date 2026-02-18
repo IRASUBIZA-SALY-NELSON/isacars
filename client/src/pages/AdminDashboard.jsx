@@ -29,7 +29,7 @@ const C = {
 // ─── SVG ICONS ────────────────────────────────────────────────────────────────
 const Icon = ({ name, size = 18, color = "currentColor" }) => {
   const p = { fill: "none", stroke: color, strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round" };
-  const w = { width: size, height: size, display: "inline-block", verticalAlign: "middle", flexShrink: 0 };
+  const w = { width: size, height: size, display: "inline-block", verticalalign: "middle", flexshrink: 0 };
   const icons = {
     grid:      <svg {...w} viewBox="0 0 24 24" {...p}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>,
     map:       <svg {...w} viewBox="0 0 24 24" {...p}><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>,
@@ -860,7 +860,7 @@ const DriversPage = () => {
           <div key={d.id} style={{display:"flex",alignItems:"center",gap:16,padding:"15px 22px",borderBottom:`1px solid ${C.border}`,transition:"background 0.15s"}}
             onMouseEnter={e=>e.currentTarget.style.background=C.card}
             onMouseLeave={e=>e.currentTarget.style.background=C.panel}>
-            <div style={{width:44,height:44,borderRadius:"50%",background:`linear-gradient(135deg,${C.greenDk},${C.green})`,display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:900,fontSize:14,flexShrink:0}}>{d.initials}</div>
+            <div style={{width:44,height:44,borderRadius:"50%",background:`linear-gradient(135deg,${C.greenDk},${C.green})`,display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:900,fontSize:14,flexshrink:0}}>{d.initials}</div>
             <div style={{flex:1}}>
               <div style={{display:"flex",alignItems:"center",gap:8}}>
                 <span style={{color:C.text,fontWeight:700,fontSize:14}}>{d.name}</span>
@@ -1232,7 +1232,7 @@ export default function AdminDashboard() {
   const SidebarContent = () => (
     <div style={{display:"flex",flexDirection:"column",height:"100%"}}>
       {/* Logo */}
-      <div style={{display:"flex",alignItems:"center",gap:12,padding:"18px 16px",borderBottom:"1px solid rgba(255,255,255,0.1)",flexShrink:0}}>
+      <div style={{display:"flex",alignItems:"center",gap:12,padding:"18px 16px",borderBottom:"1px solid rgba(255,255,255,0.1)",flexshrink:0}}>
         <img src="/logo.png" alt="Nova Transport Logo" style={{ width: 38, height: 38, objectFit: 'contain' }} />
         {!collapsed&&(
           <div>
@@ -1257,7 +1257,7 @@ export default function AdminDashboard() {
             >
               <Icon name={n.icon} size={17} color={active?C.green:"currentColor"}/>
               {!collapsed&&<span style={{fontSize:13,fontWeight:active?700:500,flex:1}}>{n.label}</span>}
-              {!collapsed&&active&&<span style={{width:6,height:6,borderRadius:"50%",background:C.green,flexShrink:0}}/>}
+              {!collapsed&&active&&<span style={{width:6,height:6,borderRadius:"50%",background:C.green,flexshrink:0}}/>}
             </button>
           );
         })}
@@ -1265,7 +1265,7 @@ export default function AdminDashboard() {
 
       {/* Driver status */}
       {!collapsed&&(
-        <div style={{margin:"0 8px 8px",padding:"14px 16px",background:"rgba(255,255,255,0.06)",borderRadius:12,border:"1px solid rgba(255,255,255,0.09)",flexShrink:0}}>
+        <div style={{margin:"0 8px 8px",padding:"14px 16px",background:"rgba(255,255,255,0.06)",borderRadius:12,border:"1px solid rgba(255,255,255,0.09)",flexshrink:0}}>
           <div style={{fontSize:10,fontWeight:800,color:"rgba(255,255,255,0.35)",letterSpacing:1.5,marginBottom:10}}>DRIVER STATUS</div>
           {[{label:"Online",count:28,color:C.green},{label:"On Ride",count:12,color:"#f59e0b"},{label:"Offline",count:5,color:"rgba(255,255,255,0.3)"}].map(s=>(
             <div key={s.label} style={{display:"flex",justifyContent:"space-between",marginBottom:7,alignItems:"center"}}>
@@ -1280,7 +1280,7 @@ export default function AdminDashboard() {
       )}
 
       {/* Logout */}
-      <div style={{padding:"12px 8px",borderTop:"1px solid rgba(255,255,255,0.08)",flexShrink:0}}>
+      <div style={{padding:"12px 8px",borderTop:"1px solid rgba(255,255,255,0.08)",flexshrink:0}}>
         <button
           onClick={handleLogout}
           style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",borderRadius:10,border:"none",background:"transparent",color:"rgba(255,255,255,0.4)",cursor:"pointer",width:"100%",transition:"all 0.2s"}}
@@ -1296,18 +1296,16 @@ export default function AdminDashboard() {
   return (
     <div style={{display:"flex",height:"100vh",background:C.bg,color:C.text,fontFamily:"'Segoe UI',system-ui,sans-serif",overflow:"hidden"}}>
       {/* Sidebar — dark */}
-      <div style={{width:collapsed?62:228,flexShrink:0,background:C.sidebar,transition:"width 0.3s ease",overflow:"hidden",display:"flex",flexDirection:"column"}}>
+      <div style={{width:collapsed?62:228,flexshrink:0,background:C.sidebar,transition:"width 0.3s ease",overflow:"hidden",display:"flex",flexDirection:"column"}}>
         <SidebarContent/>
       </div>
 
       {/* Main */}
       <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden",minWidth:0}}>
         {/* Header */}
-        <header style={{background:C.panel,borderBottom:`1px solid ${C.border}`,padding:"0 24px",height:60,display:"flex",alignItems:"center",gap:16,flexShrink:0,boxShadow:"0 1px 3px rgba(0,0,0,0.06)"}}>
+        <header style={{background:C.panel,borderBottom:`1px solid ${C.border}`,padding:"0 24px",height:60,display:"flex",alignItems:"center",gap:16,flexshrink:0,boxShadow:"0 1px 3px rgba(0,0,0,0.06)"}}>
           <button onClick={()=>setCollapsed(c=>!c)}
-            style={{width:36,height:36,borderRadius:8,border:`1px solid ${C.border}`,background:C.card,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0,transition:"border-color 0.2s"}}
-            onMouseEnter={e=>e.currentTarget.style.borderColor=C.green}
-            onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
+            style={{width:36,height:36,borderRadius:8,border:`1px solid ${C.border}`,background:C.card,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexshrink:0,transition:"border-color 0.2s"}}>
             <Icon name="menu" size={16} color={C.muted}/>
           </button>
 
@@ -1316,7 +1314,7 @@ export default function AdminDashboard() {
             <div style={{fontSize:11,color:C.muted,whiteSpace:"nowrap"}}>{new Date().toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}</div>
           </div>
 
-          <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:10,flexShrink:0}}>
+          <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:10,flexshrink:0}}>
             <div style={{display:"flex",alignItems:"center",gap:8,background:C.card,border:`1px solid ${C.border}`,borderRadius:8,padding:"7px 14px"}}>
               <Icon name="search" size={14} color={C.muted}/>
               <input placeholder="Search..." style={{background:"transparent",border:"none",outline:"none",fontSize:12,color:C.text,width:130}}/>
@@ -1327,7 +1325,7 @@ export default function AdminDashboard() {
               </button>
               <span style={{position:"absolute",top:-3,right:-3,width:16,height:16,borderRadius:"50%",background:"#ef4444",fontSize:9,fontWeight:800,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center"}}>4</span>
             </div>
-            <div style={{width:36,height:36,borderRadius:"50%",background:`linear-gradient(135deg,${C.greenDk},${C.green})`,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:13,color:"#fff",boxShadow:`0 0 10px ${C.green}40`,flexShrink:0}}>A</div>
+            <div style={{width:36,height:36,borderRadius:"50%",background:`linear-gradient(135deg,${C.greenDk},${C.green})`,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:13,color:"#fff",boxShadow:`0 0 10px ${C.green}40`,flexshrink:0}}>A</div>
           </div>
         </header>
 

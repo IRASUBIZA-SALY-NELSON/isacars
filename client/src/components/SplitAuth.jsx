@@ -17,31 +17,18 @@ const SplitAuth = () => {
   });
   const [errors, setErrors] = useState({});
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [showCarModal, setShowCarModal] = useState(false);
   const [sparkleAnimation, setSparkleAnimation] = useState(false);
   const [carAnimated, setCarAnimated] = useState(false);
 
   const inputRef = useRef(null);
 
   useEffect(() => {
-    // Check if mobile
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 1024);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    // Trigger sparkle animation
     const sparkleInterval = setInterval(() => {
       setSparkleAnimation(true);
       setTimeout(() => setSparkleAnimation(false), 1000);
     }, 5000);
 
-    return () => {
-      window.removeEventListener('resize', checkMobile);
-      clearInterval(sparkleInterval);
-    };
+    return () => clearInterval(sparkleInterval);
   }, []);
 
   // Trigger car drive-in animation on mount
@@ -186,18 +173,7 @@ const SplitAuth = () => {
 
   return (
     <div className="split-auth-container">
-      {/* Mobile Background Animation */}
-      {isMobile && <div className="mobile-bg-animation"></div>}
 
-      {/* Mobile Car Showcase Button */}
-      {isMobile && (
-        <div
-          className="mobile-car-showcase"
-          onClick={() => setShowCarModal(true)}
-        >
-          <Car size={24} />
-        </div>
-      )}
 
       {/* Left Side - Car Image */}
       <div className="auth-left">
@@ -236,12 +212,7 @@ const SplitAuth = () => {
       {/* Right Side - Auth Form */}
       <div className="auth-right">
         <div className={`auth-form-container ${sparkleAnimation ? 'sparkle' : ''}`}>
-          {/* Mobile Sparkle Effect */}
-          {isMobile && sparkleAnimation && (
-            <div className="mobile-sparkle-effect">
-              <Sparkles size={20} />
-            </div>
-          )}
+
 
           {/* Logo */}
           <div className="auth-header">
@@ -368,43 +339,7 @@ const SplitAuth = () => {
         </div>
       </div>
 
-      {/* Mobile Car Modal */}
-      {isMobile && showCarModal && (
-        <div className="mobile-car-modal">
-          <div className="modal-content">
-            <button
-              className="modal-close"
-              onClick={() => setShowCarModal(false)}
-            >
-              <ArrowLeft size={24} />
-            </button>
-            <div className="modal-car-image">
-              <img
-                src="https://images.unsplash.com/photo-1550355291-bbee04a92027?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-                alt="Premium Car"
-              />
-            </div>
-            <div className="modal-info">
-              <h3>Premium Fleet</h3>
-              <p>Experience luxury with our premium vehicles</p>
-              <div className="modal-features">
-                <div className="modal-feature">
-                  <Check size={20} />
-                  <span>Professional Drivers</span>
-                </div>
-                <div className="modal-feature">
-                  <Check size={20} />
-                  <span>24/7 Service</span>
-                </div>
-                <div className="modal-feature">
-                  <Check size={20} />
-                  <span>Luxury Comfort</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+
     </div>
   );
 };

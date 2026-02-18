@@ -229,6 +229,7 @@
   border: 2px solid #e5e7eb;
   border-radius: 10px;
   font-size: 16px;
+  color: #1f2937;
   transition: all 0.3s ease;
   background: white;
 }
@@ -348,7 +349,10 @@
   font-size: 13px;
 }
 
-/* Loading Spinner */
+.auth-input::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
 .spinner-small {
   width: 18px;
   height: 18px;

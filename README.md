@@ -88,7 +88,7 @@ npm install
 ```env
 PORT=5000
 NODE_ENV=development
-MONGODB_URI=mongodb://localhost:27017/uber-clone
+MONGODB_URI=mongodb://localhost:27017/nova-transport
 JWT_SECRET=your-secret-key
 JWT_EXPIRE=7d
 CLIENT_URL=http://localhost:5173
@@ -96,8 +96,8 @@ CLIENT_URL=http://localhost:5173
 
 #### Frontend (.env)
 ```env
-VITE_API_URL=http://localhost:5000/api
-VITE_SOCKET_URL=http://localhost:5000
+VITE_API_URL=https://isacars.onrender.com/api
+VITE_SOCKET_URL=https://isacars.onrender.com
 ```
 
 ### 5. Start MongoDB

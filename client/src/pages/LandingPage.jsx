@@ -494,7 +494,7 @@ const LandingPage = () => {
                         <Phone size={20} />
                       </div>
                       <div className="contact-text">
-                        <span className="contact-label">Call us</span>
+                        <span className="contact-label">Call Us</span>
                         <span className="contact-value">+250 781 944 664</span>
                       </div>
                     </div>
@@ -517,7 +517,7 @@ const LandingPage = () => {
                       <MapPin size={20} />
                     </div>
                     <div className="contact-text">
-                      <span className="contact-label">Visit us</span>
+                      <span className="contact-label">Visit Us</span>
                       <span className="contact-value">Gisenyi, Rwanda</span>
                     </div>
                   </div>
