@@ -226,6 +226,10 @@ const PassengerDashboard = () => {
       {/* Sidebar Drawer */}
       <div className={`app-sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
+          <div className="sidebar-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer', padding: '10px 0 20px', display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid #eee', marginBottom: '20px' }}>
+            <img src="/logo.png" alt="Nova Transport Logo" style={{ height: '32px', width: 'auto' }} />
+            <h2 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#111827', margin: 0 }}>Nova Transport</h2>
+          </div>
           <div className="user-profile-summary">
             <div className="profile-avatar">
               <User size={24} />

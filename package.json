@@ -1,7 +1,7 @@
 {
-  "name": "isacars-clone",
+  "name": "nova-transport",
   "version": "1.0.0",
-  "description": "Full-stack ISACARS ride-hailing app with React and Node.js",
+  "description": "Full-stack Nova Transport ride-hailing app with React and Node.js",
   "scripts": {
     "install-all": "cd server && npm install && cd ../client && npm install",
     "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
@@ -11,7 +11,7 @@
     "build": "cd server && npm install && cd ../client && npm install && npm run build",
     "start": "cd server && npm install && npm start"
   },
-  "keywords": ["isacars", "taxi", "ride-hailing", "react", "nodejs"],
+  "keywords": ["nova-transport", "taxi", "ride-hailing", "react", "nodejs"],
   "author": "",
   "license": "MIT",
   "devDependencies": {

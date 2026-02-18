@@ -47,7 +47,7 @@ const LandingPage = () => {
   const fleet = [
     {
       id: 1,
-      name: 'ISACARS Standard',
+      name: 'Standard',
       image: '/IMG-20251228-WA0128.jpg',
       description: 'Affordable, everyday rides',
       details: 'Our most popular option. Fits up to 4 passengers comfortably. Perfect for daily commutes and errands.',
@@ -55,7 +55,7 @@ const LandingPage = () => {
     },
     {
       id: 2,
-      name: 'ISACARS Luxury',
+      name: 'Luxury',
       image: '/IMG-20251228-WA0141.jpg',
       description: 'Premium rides with professional drivers',
       details: 'Luxury at its finest. Enjoy a high-end vehicle and professional driver for special occasions or business travel.',
@@ -63,7 +63,7 @@ const LandingPage = () => {
     },
     {
       id: 3,
-      name: 'ISACARS XL',
+      name: 'XL',
       image: '/IMG-20251228-WA0146.jpg',
       description: 'Larger rides for groups & luggage',
       details: 'Need more space? SUVs and Minivans for up to 6 people. Great for airport trips or family outings.',
@@ -71,7 +71,7 @@ const LandingPage = () => {
     },
     {
       id: 4,
-      name: 'ISACARS Eco',
+      name: 'Eco',
       image: '/IMG-20251228-WA0163.jpg',
       description: 'Sustainable electric rides',
       details: 'Reduce your carbon footprint. Ride in a hybrid or fully electric vehicle without compromising on comfort.',
@@ -79,7 +79,7 @@ const LandingPage = () => {
     },
     {
       id: 5,
-      name: 'ISACARS Elite',
+      name: 'Elite',
       image: '/car.jpeg',
       description: 'Elite cars for ultimate comfort',
       details: 'Our top-tier luxury service. Exceptional vehicles for those who want the absolute best experience.',
@@ -87,7 +87,7 @@ const LandingPage = () => {
     },
     {
       id: 6,
-      name: 'ISACARS Premium',
+      name: 'Premium',
       image: '/image.jpeg',
       description: 'Top-tier cars with extra legroom',
       details: 'Travel in style and comfort with our premium fleet. Extra space and superior features for a more relaxed journey.',
@@ -95,7 +95,7 @@ const LandingPage = () => {
     },
     {
       id: 7,
-      name: 'ISACARS Private',
+      name: 'Private',
       image: '/alone.jpeg',
       description: 'Discrete rides for total privacy',
       details: 'A specialized service for those who prioritize privacy and discretion. Unmarked high-quality vehicles.',
@@ -103,10 +103,10 @@ const LandingPage = () => {
     },
     {
       id: 8,
-      name: 'ISACARS Select',
+      name: 'Select',
       image: '/8a.jpg',
       description: 'Highly rated drivers and newer cars',
-      details: 'A step up from ISACARS Standard. Enjoy rides in newer vehicles with our top-rated drivers for a consistently great experience.',
+      details: 'A step up from our Standard service. Enjoy rides in newer vehicles with our top-rated drivers for a consistently great experience.',
       stats: { passengers: 4, bags: 2, type: 'Select' }
     }
   ];
@@ -364,8 +364,8 @@ const LandingPage = () => {
       <section className="cta-section">
         <div className="container">
           <div className="cta-content">
-            <h2>Ready to Start Your Journey?</h2>
-            <p>Join thousands of satisfied riders today</p>
+            <h1>Move Your World with <span>Nova Transport</span></h1>
+            <p>Reliable, comfortable, and safe rides at your fingertips in Rwanda.</p>
             <button className="btn btn-accent btn-lg" onClick={() => navigate('/register')}>
               Sign Up Now
             </button>
@@ -378,7 +378,10 @@ const LandingPage = () => {
         <div className="container">
           <div className="footer-content">
             <div className="footer-section">
-              <h3>ISACARS</h3>
+              <div className="footer-logo">
+                <img src="/logo.png" alt="Nova Transport Logo" className="footer-logo-img" />
+                <h3>Nova Transport</h3>
+              </div>
               <p>Your trusted ride-hailing partner</p>
             </div>
             <div className="footer-section">
@@ -407,7 +410,7 @@ const LandingPage = () => {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>&copy; 2026 ISACARS. All rights reserved.</p>
+            <p>&copy; 2026 Nova Transport. All rights reserved.</p>
           </div>
         </div>
       </footer>
@@ -497,14 +500,14 @@ const LandingPage = () => {
                     </div>
                   </a>
 
-                  <a href="mailto:info@isacars.rw?subject=Inquiry about Isacars" className="contact-item-link">
-                    <div className="contact-item">
-                      <div className="contact-icon-wrapper email">
-                        <Mail size={20} />
+                  <a href="mailto:info@novatransport.rw?subject=Inquiry about Nova Transport" className="contact-item-link">
+                    <div className="contact-item-card">
+                      <div className="contact-icon-wrapper">
+                        <Mail className="contact-icon" />
                       </div>
-                      <div className="contact-text">
-                        <span className="contact-label">Email us</span>
-                        <span className="contact-value">info@isacars.rw</span>
+                      <div className="contact-details">
+                        <span className="contact-label">Email Us</span>
+                        <span className="contact-value">info@novatransport.rw</span>
                       </div>
                     </div>
                   </a>

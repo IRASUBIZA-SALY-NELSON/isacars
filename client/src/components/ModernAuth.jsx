@@ -72,11 +72,11 @@ const ModernAuth = () => {
     try {
       if (isLogin) {
         await login(formData.email, formData.password);
-        toast.success('Welcome back to ISACARS!');
+        toast.success('Welcome back to Nova Transport!');
         navigate('/passenger/dashboard');
       } else {
         await register({ ...formData, role: 'passenger' });
-        toast.success('Welcome to ISACARS!');
+        toast.success('Welcome to Nova Transport!');
         navigate('/passenger/dashboard');
       }
     } catch (error) {
@@ -91,7 +91,7 @@ const ModernAuth = () => {
     try {
       // Load Google API
       const { gapi } = await loadGoogleScript();
-      
+
       // Initialize Google Auth
       await gapi.auth2.init({
         client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
@@ -117,7 +117,7 @@ const ModernAuth = () => {
       });
 
       if (result.success) {
-        toast.success('Welcome to ISACARS!');
+        toast.success('Welcome to Nova Transport!');
         navigate('/passenger/dashboard');
       } else {
         throw new Error(result.message);
@@ -170,13 +170,11 @@ const ModernAuth = () => {
           {/* Logo and Branding */}
           <div className="auth-header">
             <div className="logo-container">
-              <div className="logo-icon">
-                <Zap size={32} />
-              </div>
-              <h1 className="logo-text">ISACARS</h1>
+              <img src="/logo.png" alt="Nova Transport Logo" className="logo-img" />
+              <h1 className="logo-text">Nova Transport</h1>
             </div>
             <p className="auth-subtitle">
-              {isLogin ? 'Welcome back! Your ride awaits' : 'Start your journey with ISACARS'}
+              {isLogin ? 'Welcome back! Your ride awaits' : 'Start your journey with Nova Transport'}
             </p>
           </div>
 

@@ -5,13 +5,13 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'ISACARS Taxi API',
+      title: 'Nova Transport Taxi API',
       version: '1.0.0',
-      description: `Comprehensive API documentation for the ISACARS taxi booking and management platform.`,
+      description: `Comprehensive API documentation for the Nova Transport taxi booking and management platform.`,
       contact: {
-        name: 'ISACARS Support',
-        email: 'irasubizasalynelson@gmail.com',
-        url: 'https://isacars.vercel.app'
+        name: 'Nova Transport Support',
+        email: 'info@novatransport.rw',
+        url: 'https://novatransport.rw'
       },
       license: {
         name: 'MIT',

@@ -85,12 +85,10 @@ const DriverSidebar = ({ isOpen, onClose, currentPage }) => {
       }} onClick={e => e.stopPropagation()}>
         {/* Logo */}
         <div style={{display:"flex",alignItems:"center",gap:12,padding:"18px 16px",borderBottom:"1px solid rgba(255,255,255,0.1)",flexShrink:0}}>
-          <div style={{width:38,height:38,borderRadius:10,background:C.green,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`0 0 16px ${C.green}60`}}>
-            <Icon name="car" size={19} color="#fff"/>
-          </div>
+          <img src="/logo.png" alt="Nova Transport Logo" style={{ width: 38, height: 38, objectFit: 'contain' }} />
           {!collapsed && (
             <div>
-              <div style={{fontSize:15,fontWeight:900,color:"#fff",letterSpacing:-0.5,lineHeight:1}}>ISACARS</div>
+              <div style={{fontSize:15,fontWeight:900,color:"#fff",letterSpacing:-0.5,lineHeight:1}}>Nova Transport</div>
               <div style={{fontSize:10,color:"rgba(255,255,255,0.45)",marginTop:3,fontWeight:700,letterSpacing:1}}>DRIVER PANEL</div>
             </div>
           )}

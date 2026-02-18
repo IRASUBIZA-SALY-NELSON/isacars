@@ -62,8 +62,8 @@ const Register = () => {
       <div className="auth-container">
         <div className="auth-card card">
           <div className="auth-header">
-            <div className="auth-icon">
-              <UserPlus size={40} />
+            <div className="auth-logo">
+              <img src="/logo.png" alt="Nova Transport Logo" className="auth-logo-img" />
             </div>
             <h1>Create Account</h1>
             <p>Join us today</p>
@@ -95,7 +95,7 @@ const Register = () => {
                 type="email"
                 name="email"
                 className="form-input"
-                placeholder="your@isacars.rw"
+                placeholder="your@novatransport.rw"
                 value={formData.email}
                 onChange={handleChange}
                 required

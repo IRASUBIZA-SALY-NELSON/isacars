@@ -108,7 +108,7 @@ const SplitAuth = () => {
       }
 
       if (result.success) {
-        toast.success(isLogin ? 'Welcome back to ISACARS!' : 'Welcome to ISACARS!');
+        toast.success(isLogin ? 'Welcome back to Nova Transport!' : 'Welcome to Nova Transport!');
         navigate(`/${result.user.role}/dashboard`);
       } else {
         toast.error(result.message || 'Authentication failed');
@@ -146,7 +146,7 @@ const SplitAuth = () => {
       });
 
       if (result.success) {
-        toast.success('Welcome to ISACARS!');
+        toast.success('Welcome to Nova Transport!');
         navigate(`/${result.user.role}/dashboard`);
       } else {
         toast.error(result.message || 'Google authentication failed');
@@ -246,13 +246,11 @@ const SplitAuth = () => {
           {/* Logo */}
           <div className="auth-header">
             <div className="logo-container">
-              <div className="logo-icon">
-                <Zap size={32} />
-              </div>
-              <h1 className="logo-text">ISACARS</h1>
+              <img src="/logo.png" alt="Nova Transport Logo" className="logo-img" />
+              <h1 className="logo-text">Nova Transport</h1>
             </div>
             <p className="auth-subtitle">
-              {isLogin ? 'Welcome back! Your ride awaits' : 'Start your journey with ISACARS'}
+              {isLogin ? 'Welcome back! Your ride awaits' : 'Start your journey with Nova Transport'}
             </p>
           </div>
 

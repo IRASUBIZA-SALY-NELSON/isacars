@@ -28,7 +28,7 @@ const httpServer = createServer(app);
 // Socket.io setup
 const io = new Server(httpServer, {
   cors: {
-    origin: ['http://localhost:5173', 'http://localhost:5174', 'https://isacars.vercel.app'],
+    origin: ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw'],
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -44,7 +44,7 @@ app.use(express.urlencoded({ extended: true }));
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://isacars.vercel.app'],
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw'],
   credentials: true
 }));
 
@@ -62,7 +62,7 @@ app.use('/api-docs', swaggerUi.serve);
 app.get('/api-docs', swaggerUi.setup(specs, {
   explorer: true,
   customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: 'ISACARS API Documentation'
+  customSiteTitle: 'Nova Transport API Documentation'
 }));
 
 // Serve Swagger JSON spec

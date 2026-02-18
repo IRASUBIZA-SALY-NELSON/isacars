@@ -48,8 +48,8 @@ const Login = () => {
       <div className="auth-container">
         <div className="auth-card card">
           <div className="auth-header">
-            <div className="auth-icon">
-              <LogIn size={40} />
+            <div className="auth-logo">
+              <img src="/logo.png" alt="Nova Transport Logo" className="auth-logo-img" />
             </div>
             <h1>Welcome Back</h1>
             <p>Sign in to your account</p>
@@ -112,22 +112,22 @@ const Login = () => {
           <div className="demo-accounts">
             <div className="demo-account">
               <strong>Passenger</strong>
-              <p>passenger@isacars.rw</p>
+              <p>passenger@novatransport.rw</p>
               <p>password123</p>
             </div>
             <div className="demo-account">
               <strong>Driver</strong>
-              <p>driver@isacars.rw</p>
+              <p>driver@novatransport.rw</p>
               <p>password123</p>
             </div>
             <div className="demo-account">
               <strong>Driver</strong>
-              <p>driver2@isacars.rw</p>
+              <p>driver2@novatransport.rw</p>
               <p>password123</p>
             </div>
             <div className="demo-account">
               <strong>Admin</strong>
-              <p>admin@isacars.rw</p>
+              <p>admin@novatransport.rw</p>
               <p>password123</p>
             </div>
           </div>

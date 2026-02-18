@@ -1,6 +1,6 @@
-# 🚗 Uber Clone - Full Stack Ride Hailing Application
+# 🚗 Nova Transport - Full Stack Ride Hailing Application
 
-A comprehensive, feature-rich Uber clone built with React.js and Node.js. This application includes all the essential features of a modern ride-hailing platform.
+A comprehensive, feature-rich Nova Transport ride-hailing app built with React.js and Node.js. This application includes all the essential features of a modern ride-hailing platform.
 
 ## ✨ Features
 
@@ -298,4 +298,4 @@ Built with ❤️ by the development team
 ---
 
 **Note:** This is a demo application for educational purposes. For production use, ensure proper security measures, payment gateway integration, and compliance with local regulations.
-# isacars
+# Nova Transport

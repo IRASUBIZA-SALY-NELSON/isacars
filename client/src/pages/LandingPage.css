@@ -310,6 +310,23 @@
   margin-bottom: var(--spacing-md);
 }
 
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: var(--spacing-md);
+}
+
+.footer-logo-img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.footer-logo h3 {
+  margin-bottom: 0 !important;
+}
+
 .footer-section ul {
   list-style: none;
 }

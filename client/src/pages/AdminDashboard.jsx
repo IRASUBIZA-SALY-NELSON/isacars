@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import toast from "../utils/toast";
 import {
   AreaChart, Area, BarChart, Bar, LineChart, Line,
   PieChart, Pie, Cell, RadarChart, Radar, PolarGrid,
@@ -1150,8 +1153,8 @@ const SettingsPage = () => {
     <div style={{display:"flex",flexDirection:"column",gap:16,maxWidth:640}}>
       {[
         {section:"General",fields:[
-          {label:"Platform Name",    type:"text",  value:"ISACARS Admin"},
-          {label:"Support Email",    type:"email", value:"admin@isacars.com"},
+          {label:"Platform Name",    type:"text",  value:"Nova Transport Admin"},
+          {label:"Support Email",    type:"email", value:"admin@novatransport.rw"},
           {label:"Default Currency", type:"select",options:["USD","EUR","GBP"]},
         ]},
         {section:"Notifications",fields:[
@@ -1215,17 +1218,25 @@ export default function AdminDashboard() {
   const [page, setPage] = useState("overview");
   const [collapsed, setCollapsed] = useState(false);
   const Page = PAGES[page];
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    toast.success("You have successfully logged out!");
+    setTimeout(() => {
+      navigate("/login");
+    }, 1500);
+  };
 
   const SidebarContent = () => (
     <div style={{display:"flex",flexDirection:"column",height:"100%"}}>
       {/* Logo */}
       <div style={{display:"flex",alignItems:"center",gap:12,padding:"18px 16px",borderBottom:"1px solid rgba(255,255,255,0.1)",flexShrink:0}}>
-        <div style={{width:38,height:38,borderRadius:10,background:C.green,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`0 0 16px ${C.green}60`}}>
-          <Icon name="car" size={19} color="#fff"/>
-        </div>
+        <img src="/logo.png" alt="Nova Transport Logo" style={{ width: 38, height: 38, objectFit: 'contain' }} />
         {!collapsed&&(
           <div>
-            <div style={{fontSize:15,fontWeight:900,color:"#fff",letterSpacing:-0.5,lineHeight:1}}>ISACARS</div>
+            <div style={{fontSize:15,fontWeight:900,color:"#fff",letterSpacing:-0.5,lineHeight:1}}>Nova Transport</div>
             <div style={{fontSize:10,color:"rgba(255,255,255,0.45)",marginTop:3,fontWeight:700,letterSpacing:1}}>ADMIN PANEL</div>
           </div>
         )}
@@ -1270,7 +1281,9 @@ export default function AdminDashboard() {
 
       {/* Logout */}
       <div style={{padding:"12px 8px",borderTop:"1px solid rgba(255,255,255,0.08)",flexShrink:0}}>
-        <button style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",borderRadius:10,border:"none",background:"transparent",color:"rgba(255,255,255,0.4)",cursor:"pointer",width:"100%",transition:"all 0.2s"}}
+        <button
+          onClick={handleLogout}
+          style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",borderRadius:10,border:"none",background:"transparent",color:"rgba(255,255,255,0.4)",cursor:"pointer",width:"100%",transition:"all 0.2s"}}
           onMouseEnter={e=>{e.currentTarget.style.background="rgba(239,68,68,0.15)";e.currentTarget.style.color="#ef4444";}}
           onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color="rgba(255,255,255,0.4)";}}>
           <Icon name="logout" size={16} color="currentColor"/>
