@@ -53,11 +53,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// Compression
 app.use(compression());
 
-// API Documentation
-// Serve Swagger UI
 app.use('/api-docs', swaggerUi.serve);
 app.get('/api-docs', swaggerUi.setup(specs, {
   explorer: true,
@@ -65,7 +62,6 @@ app.get('/api-docs', swaggerUi.setup(specs, {
   customSiteTitle: 'Nova Transport API Documentation'
 }));
 
-// Serve Swagger JSON spec
 app.get('/api-docs.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send(specs);
