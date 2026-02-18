@@ -83,10 +83,13 @@ app.options('*', (req, res) => {
   const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw', 'https://novatransport.vercel.app/'];
 
   console.log(`CORS OPTIONS request from origin: ${origin} at ${new Date().toISOString()}`);
+  console.log('Available origins:', allowedOrigins);
 
   if (allowedOrigins.includes(origin)) {
+    console.log(`Origin ${origin} is ALLOWED`);
     res.header('Access-Control-Allow-Origin', origin);
   } else {
+    console.log(`Origin ${origin} is NOT ALLOWED, using wildcard`);
     res.header('Access-Control-Allow-Origin', '*');
   }
 
