@@ -34,11 +34,7 @@ const io = new Server(httpServer, {
     allowedHeaders: ['Content-Type', 'Authorization']
   }
 });
-
-// Make io accessible to routes
 app.set('io', io);
-
-// Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
