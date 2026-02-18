@@ -37,15 +37,15 @@ const io = new Server(httpServer, {
 app.set('io', io);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Security middleware
-app.use(helmet());
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw', 'https://novatransport.vercel.app/'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Security middleware
+app.use(helmet());
 
 // Logging
 if (process.env.NODE_ENV === 'development') {
