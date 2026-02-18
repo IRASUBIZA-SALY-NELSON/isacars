@@ -28,7 +28,7 @@ const httpServer = createServer(app);
 // Socket.io setup
 const io = new Server(httpServer, {
   cors: {
-    origin: ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw'],
+    origin: ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw', 'https://novatransport.vercel.app/'],
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -44,7 +44,7 @@ app.use(express.urlencoded({ extended: true }));
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw'],
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw', 'https://novatransport.vercel.app/'],
   credentials: true
 }));
 
