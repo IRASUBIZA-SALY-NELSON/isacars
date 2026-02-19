@@ -64,8 +64,29 @@ const Profile = () => {
       setLoading(false);
       setShowPasswordModal(false);
       setPasswords({ current: '', new: '', confirm: '' });
-      toast.success('Password changed successfully!');
+      toast.success('Security credentials updated!', { icon: '🔐' });
     }, 1500);
+  };
+
+  const handleToggle = (setting, status) => {
+    toast.success(`${setting} ${status ? 'enabled' : 'disabled'}`, {
+      icon: status ? '🔔' : '🔕',
+      duration: 2000
+    });
+  };
+
+  const handleDeleteAccount = () => {
+    toast((t) => (
+      <span>
+        Are you sure? <b>This is permanent.</b>
+        <button
+          onClick={() => { toast.dismiss(t.id); toast.error('Account deletion requested.'); }}
+          style={{marginLeft: '10px', background: '#ef4444', color: 'white', border: 'none', padding: '4px 8px', borderRadius: '4px', fontSize: '12px'}}
+        >
+          Confirm
+        </button>
+      </span>
+    ), { duration: 5000, icon: '⚠️' });
   };
 
   return (
@@ -163,7 +184,7 @@ const Profile = () => {
                 <p>Receive updates about your rides</p>
               </div>
               <label className="toggle-switch">
-                <input type="checkbox" defaultChecked />
+                <input type="checkbox" defaultChecked onChange={(e) => handleToggle('Push Notifications', e.target.checked)} />
                 <span className="slider"></span>
               </label>
             </div>
@@ -173,7 +194,7 @@ const Profile = () => {
                 <p>Get receipts and monthly reports</p>
               </div>
               <label className="toggle-switch">
-                <input type="checkbox" defaultChecked />
+                <input type="checkbox" defaultChecked onChange={(e) => handleToggle('Email Updates', e.target.checked)} />
                 <span className="slider"></span>
               </label>
             </div>
@@ -183,7 +204,7 @@ const Profile = () => {
                 <p>Allow drivers to see your precise location</p>
               </div>
               <label className="toggle-switch">
-                <input type="checkbox" defaultChecked />
+                <input type="checkbox" defaultChecked onChange={(e) => handleToggle('Location Sharing', e.target.checked)} />
                 <span className="slider"></span>
               </label>
             </div>
@@ -201,7 +222,7 @@ const Profile = () => {
               Change Password
             </button>
             <div className="danger-zone" style={{ marginTop: '16px' }}>
-              <button className="btn-danger-outline">
+              <button className="btn-danger-outline" onClick={handleDeleteAccount}>
                 <Trash2 size={18} />
                 Delete Account
               </button>

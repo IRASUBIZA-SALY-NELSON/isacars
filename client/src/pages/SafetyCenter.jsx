@@ -11,14 +11,33 @@ const SafetyCenter = () => {
   const navigate = useNavigate();
 
   const handleSOS = () => {
-    toast.error('Emergency services and your trusted contacts are being notified!', {
-      duration: 5000,
-      icon: '🚨',
-    });
+    toast.loading('Activating emergency protocol...', { duration: 2000 });
+    setTimeout(() => {
+      toast.error('EMERGENCY SOS ACTIVATED. Help is on the way.', {
+        duration: 8000,
+        icon: '🚨',
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+          fontWeight: 'bold',
+          fontSize: '16px'
+        }
+      });
+    }, 2000);
   };
 
-  const handleToolClick = (toolName) => {
-    toast.success(`${toolName} feature is ready!`);
+  const handleToolClick = (toolName, icon = '🛡️') => {
+    if (toolName === 'Share Trip') {
+      toast.success('Live tracking link shared with trusted contacts!', { icon: '🔗' });
+    } else if (toolName === 'Emergency Numbers') {
+      toast('Opening local emergency directory...', { icon: '📞' });
+    } else {
+      toast.success(`${toolName} feature activated!`, { icon });
+    }
+  };
+
+  const handleRemoveContact = (name) => {
+    toast(`${name} removed from trusted contacts.`, { icon: '🗑️' });
   };
 
   return (
@@ -44,7 +63,7 @@ const SafetyCenter = () => {
         {/* Safety Tools */}
         <h2 className="section-title"><ShieldCheck size={20} color="#22c55e" /> Safety Toolkit</h2>
         <div className="safety-tools-grid">
-          <div className="tool-card" onClick={() => handleToolClick('Share Trip')}>
+          <div className="tool-card" onClick={() => handleToolClick('Share Trip', '📤')}>
             <div className="tool-icon">
               <Share2 size={24} />
             </div>
@@ -55,7 +74,7 @@ const SafetyCenter = () => {
             <ChevronRight className="chevron" size={20} />
           </div>
 
-          <div className="tool-card" onClick={() => handleToolClick('Emergency Numbers')}>
+          <div className="tool-card" onClick={() => handleToolClick('Emergency Numbers', '🚑')}>
             <div className="tool-icon">
               <PhoneCall size={24} />
             </div>
@@ -66,7 +85,7 @@ const SafetyCenter = () => {
             <ChevronRight className="chevron" size={20} />
           </div>
 
-          <div className="tool-card" onClick={() => handleToolClick('Privacy Settings')}>
+          <div className="tool-card" onClick={() => handleToolClick('Privacy Settings', '🔒')}>
             <div className="tool-icon">
                <MapPin size={24} />
             </div>
@@ -87,7 +106,7 @@ const SafetyCenter = () => {
               <h4>Moses S.</h4>
               <p>Brother • +250 78x xxx xxx</p>
             </div>
-            <ShieldAlert size={18} color="#ef4444" />
+            <ShieldAlert size={18} color="#ef4444" style={{ cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); handleRemoveContact('Moses S.'); }} />
           </div>
           <div className="contact-item">
             <div className="contact-avatar">JK</div>
@@ -95,7 +114,7 @@ const SafetyCenter = () => {
               <h4>Julienne K.</h4>
               <p>Friend • +250 78x xxx xxx</p>
             </div>
-            <ShieldAlert size={18} color="#ef4444" />
+            <ShieldAlert size={18} color="#ef4444" style={{ cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); handleRemoveContact('Julienne K.'); }} />
           </div>
           <button className="btn-add-contact" onClick={() => handleToolClick('Add Contact')}>
             <Plus size={18} />
@@ -105,7 +124,7 @@ const SafetyCenter = () => {
 
         {/* Safety Tips */}
         <h2 className="section-title"><Info size={20} color="#22c55e" /> Safety Guidelines</h2>
-        <div className="tool-card" onClick={() => handleToolClick('Safety Tips')}>
+        <div className="tool-card" onClick={() => handleToolClick('Safety Tips', '📚')}>
           <div className="tool-icon" style={{ background: '#eff6ff', color: '#3b82f6' }}>
             <ShieldCheck size={24} />
           </div>

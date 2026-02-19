@@ -5,6 +5,7 @@ import { MapPin, Navigation, DollarSign, Clock, Star, LogOut, User, History, Men
 import api from '../utils/api';
 import socketService from '../services/socket';
 import MapComponent from '../components/MapComponent';
+import PassengerSidebar from '../components/PassengerSidebar';
 import toast from 'react-hot-toast';
 import './PassengerDashboard.css';
 
@@ -56,17 +57,17 @@ const PassengerDashboard = () => {
   const setupSocketListeners = () => {
     socketService.on('rideAccepted', (ride) => {
       setActiveRide(ride);
-      toast.success('Driver accepted your ride!');
+      toast.success('Great news! Driver accepted your ride!', { icon: '🚕' });
     });
 
     socketService.on('rideStatusUpdated', (ride) => {
       setActiveRide(ride);
       if (ride.status === 'arrived') {
-        toast.success('Driver has arrived!');
+        toast.success('Your driver has arrived at the location!', { icon: '📍', duration: 5000 });
       } else if (ride.status === 'started') {
-        toast.success('Ride started!');
+        toast('Your journey has begun. Sit back and enjoy!', { icon: '🚀' });
       } else if (ride.status === 'completed') {
-        toast.success('Ride completed!');
+        toast.success('You have reached your destination!', { icon: '🏁' });
         setActiveRide(null);
         fetchRideHistory();
       }
@@ -100,9 +101,10 @@ const PassengerDashboard = () => {
   };
 
   const handleInputChange = (e) => {
+    const { name, value } = e.target;
     setBookingData({
       ...bookingData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
   };
 
@@ -134,6 +136,7 @@ const PassengerDashboard = () => {
       duration: Math.round(duration),
       total: Math.round(total)
     });
+    toast.success(`Fare estimated at ${Math.round(total)} RWF`, { icon: '💰' });
   };
 
   const handleBookRide = async (e) => {
@@ -207,12 +210,13 @@ const PassengerDashboard = () => {
       setShowBooking(true);
       toast.success('Ride cancelled');
     } catch (error) {
-      toast.error('Failed to cancel ride');
+      toast.error('Failed to cancel ride. Please try again.');
     }
   };
 
   const handleLogout = () => {
     logout();
+    toast.success('Logged out successfully. See you soon!', { icon: '👋' });
     navigate('/');
   };
 
@@ -235,65 +239,11 @@ const PassengerDashboard = () => {
         </button>
       </header>
 
-      {/* Sidebar Overlay */}
-      {isSidebarOpen && (
-        <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)}></div>
-      )}
-
-      {/* Sidebar Drawer */}
-      <div className={`app-sidebar ${isSidebarOpen ? 'open' : ''}`}>
-        <div className="sidebar-header">
-          <div className="sidebar-logo-section" onClick={() => navigate('/')}>
-            <img src="/logo.png" alt="Nova" className="sidebar-logo-img" />
-            <h2 className="sidebar-brand">Nova Transport</h2>
-          </div>
-
-          <div className="user-profile-summary">
-            <div className="profile-avatar-wrapper">
-              <img
-                src={user?.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop"}
-                alt="Avatar"
-                className="sidebar-avatar"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.style.display = 'none';
-                  e.target.parentNode.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
-                }}
-              />
-            </div>
-            <div className="profile-info">
-              <h3>{user?.name || 'John Passenger'}</h3>
-              <p>Gold Member</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="sidebar-menu">
-          <div className="menu-item" onClick={() => navigate('/passenger/ride-history')}>
-            <History size={20} />
-            <span>Ride History</span>
-          </div>
-          <div className="menu-item" onClick={() => navigate('/passenger/profile')}>
-            <User size={20} />
-            <span>Profile Settings</span>
-          </div>
-          <div className="menu-item" onClick={() => navigate('/passenger/safety')}>
-            <Shield size={20} />
-            <span>Safety Center</span>
-          </div>
-          <div className="menu-item" onClick={() => navigate('/passenger/support')}>
-            <HelpCircle size={20} />
-            <span>Help & Support</span>
-          </div>
-        </div>
-
-        <div className="sidebar-footer" style={{marginTop: 'auto', borderTop: '1px solid #eee', padding: '20px'}}>
-          <div className="menu-item" onClick={handleLogout}>
-            <LogOut size={20} />
-            <span>Log Out</span>
-          </div>
-        </div>
-      </div>
+      <PassengerSidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        currentPage="dashboard"
+      />
 
       {/* Floating Panel (Booking / Active Ride) */}
       <div className="floating-panel">
@@ -335,7 +285,10 @@ const PassengerDashboard = () => {
                   <div
                     key={type}
                     className={`vehicle-option ${bookingData.vehicleType === type ? 'selected' : ''}`}
-                    onClick={() => setBookingData({...bookingData, vehicleType: type})}
+                    onClick={() => {
+                      setBookingData({...bookingData, vehicleType: type});
+                      toast(`Selected ${type.charAt(0).toUpperCase() + type.slice(1)} class`, { icon: '✨', duration: 1500 });
+                    }}
                   >
                     <div className="vehicle-icon-wrapper">
                       {type === 'economy' && <Car size={24} />}

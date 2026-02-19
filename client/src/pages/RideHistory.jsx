@@ -59,6 +59,11 @@ const RideHistory = () => {
       ride.dropoffLocation?.address?.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
+  const handleRideClick = (rideId) => {
+    toast(`Fetching details for ride #${rideId.slice(-4)}`, { icon: '🔍', duration: 1500 });
+    navigate(`/${user?.role || 'passenger'}/ride-details/${rideId}`);
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -81,10 +86,6 @@ const RideHistory = () => {
 
   const handleBack = () => {
     navigate(user?.role === 'driver' ? '/driver/dashboard' : '/passenger/dashboard');
-  };
-
-  const handleRideClick = (rideId) => {
-    navigate(`/${user?.role || 'passenger'}/ride-details/${rideId}`);
   };
 
   if (loading) {
@@ -123,14 +124,14 @@ const RideHistory = () => {
         </div>
 
         <div className="history-summary-cards">
-          <div className="summary-card-premium">
+          <div className="summary-card-premium" onClick={() => toast(`You have completed ${totalRides} trips!`, { icon: '📊' })}>
             <div className="card-icon blue"><History size={20} /></div>
             <div className="card-content">
               <span className="card-value">{totalRides}</span>
               <span className="card-label">Total {user?.role === 'driver' ? 'Trips' : 'Rides'}</span>
             </div>
           </div>
-          <div className="summary-card-premium">
+          <div className="summary-card-premium" onClick={() => toast(`Total ${user?.role === 'driver' ? 'earnings' : 'spending'}: ${totalSpent} RWF`, { icon: '💰' })}>
             <div className="card-icon green"><DollarSign size={20} /></div>
             <div className="card-content">
               <span className="card-value">{totalSpent} RWF</span>

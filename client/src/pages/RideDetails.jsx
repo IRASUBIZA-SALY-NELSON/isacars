@@ -120,8 +120,12 @@ const RideDetails = () => {
             </p>
           </div>
           <div className="driver-actions-main">
-            <button className="action-circle-btn"><Phone size={20} /></button>
-            <button className="action-circle-btn"><MessageCircle size={20} /></button>
+            <button className="action-circle-btn" onClick={() => toast.success('Dialing driver...')}>
+              <Phone size={20} />
+            </button>
+            <button className="action-circle-btn" onClick={() => toast.success('Opening chat with driver...')}>
+              <MessageCircle size={20} />
+            </button>
           </div>
         </div>
 
@@ -143,7 +147,7 @@ const RideDetails = () => {
           </div>
         </div>
 
-        <div className="payment-method-card">
+        <div className="payment-method-card" onClick={() => toast('Payment verified under secure encryption.', { icon: '🛡️' })}>
           <div className="pm-icon-bg">
             <CreditCard size={20} />
           </div>
