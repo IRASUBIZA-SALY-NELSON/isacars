@@ -6,7 +6,6 @@
   position: relative;
   overflow: hidden;
 }
-/* this are hte omments  */
 
 .footer-container::before {
   content: '';
