@@ -77,14 +77,20 @@ app.get('/api-docs.json', (req, res) => {
   res.send(specs);
 });
 
-// Health check endpoint
+// Basic root route
+app.get('/', (req, res) => {
+  res.json({
+    message: '🚗 Uber Clone API is running',
+    version: '1.0.1-DEPLOYED',
+    health: 'https://isacars.onrender.com/api/health'
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
     version: '1.0.1-DEPLOYED',
-    timestamp: new Date().toISOString(),
-    cors: 'FIXED-FINAL',
-    message: 'DEPLOYMENT FORCED'
+    timestamp: new Date().toISOString()
   });
 });
 
@@ -94,20 +100,18 @@ app.options('*', (req, res) => {
   const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw', 'https://novatransport.vercel.app'];
 
   console.log(`CORS OPTIONS request from origin: ${origin} at ${new Date().toISOString()}`);
-  console.log('Available origins:', allowedOrigins);
 
   if (allowedOrigins.includes(origin)) {
-    console.log(`Origin ${origin} is ALLOWED`);
     res.header('Access-Control-Allow-Origin', origin);
-  } else {
-    console.log(`Origin ${origin} is NOT ALLOWED, using wildcard`);
-    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    return res.sendStatus(200);
   }
 
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200);
+  // For non-allowed origins, we still want to respond to the browser's preflight
+  // but the browser will block the subsequent request anyway.
+  res.sendStatus(204);
 });
 
 // Mount routers
@@ -126,14 +130,8 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// Health check
-app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'Server is running',
-    timestamp: new Date().toISOString()
-  });
-});
+// Re-mount health check to ensure it's available at the end too if needed, but one is enough.
+// Already defined above. Removing the duplicate.
 
 // Socket.io connection handling
 io.on('connection', (socket) => {
