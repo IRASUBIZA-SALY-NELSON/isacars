@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, Navigation, Menu } from 'lucide-react';
+import { ArrowLeft, Search, Navigation, Menu, History, DollarSign, Clock } from 'lucide-react';
 import DriverSidebar from '../components/DriverSidebar';
 import api from '../utils/api';
 import toast from 'react-hot-toast';
@@ -104,28 +104,38 @@ const RideHistory = () => {
       <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden"}}>
         <div className="ride-history-new">
       <div className="history-header">
-        <button className="back-btn-round" onClick={handleBack}>
-          <ArrowLeft size={20} />
-        </button>
-        {user?.role === 'driver' && (
-          <button
-            className="back-btn-round"
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            style={{marginLeft: '8px'}}
-          >
-            <Menu size={20} />
+        <div className="header-top">
+          <button className="back-btn-premium" onClick={handleBack}>
+            <ArrowLeft size={24} />
           </button>
-        )}
-        <h1 className="history-title">Ride History</h1>
-
-        <div className="history-summary">
-          <div className="summary-item">
-            <span className="summary-value">{totalRides}</span>
-            <span className="summary-label">TOTAL {user?.role === 'driver' ? 'TRIPS' : 'RIDES'}</span>
+          <div className="header-text">
+            <h1 className="history-title-premium">Ride History</h1>
+            <p className="history-subtitle">View your past trips and details</p>
           </div>
-          <div className="summary-item">
-            <span className="summary-value">${totalSpent}</span>
-            <span className="summary-label">TOTAL {user?.role === 'driver' ? 'EARNED' : 'SPENT'}</span>
+          {user?.role === 'driver' && (
+            <button
+              className="back-btn-premium"
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            >
+              <Menu size={24} />
+            </button>
+          )}
+        </div>
+
+        <div className="history-summary-cards">
+          <div className="summary-card-premium">
+            <div className="card-icon blue"><History size={20} /></div>
+            <div className="card-content">
+              <span className="card-value">{totalRides}</span>
+              <span className="card-label">Total {user?.role === 'driver' ? 'Trips' : 'Rides'}</span>
+            </div>
+          </div>
+          <div className="summary-card-premium">
+            <div className="card-icon green"><DollarSign size={20} /></div>
+            <div className="card-content">
+              <span className="card-value">${totalSpent}</span>
+              <span className="card-label">Total {user?.role === 'driver' ? 'Earned' : 'Spent'}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -155,29 +165,39 @@ const RideHistory = () => {
         {filteredRides.map((ride, index) => (
           <div
             key={ride._id}
-            className={`ride-item-card ${index === 0 ? 'highlight-border' : ''}`}
+            className="ride-card-premium animate-in fade-in"
             onClick={() => handleRideClick(ride._id)}
+            style={{ animationDelay: `${index * 50}ms` }}
           >
-            <div className="ride-loc-info">
-              <div className="loc-row">
-                <div className="loc-dot pickup-dot"></div>
-                <span className="loc-text">{ride.pickupLocation?.address}</span>
+            <div className="card-header-premium">
+              <div className="ride-date-pill">
+                <Clock size={12} />
+                <span>{formatDate(ride.createdAt)} • {formatTime(ride.createdAt)}</span>
               </div>
-              <div className="loc-line"></div>
-              <div className="loc-row">
-                <Navigation size={14} className="loc-arrow" />
-                <span className="loc-text">{ride.dropoffLocation?.address}</span>
+              <div className="ride-price-badge">${ride.fare?.total?.toFixed(2)}</div>
+            </div>
+
+            <div className="ride-route-premium">
+              <div className="route-indicator">
+                <div className="route-dot pickup"></div>
+                <div className="route-line-dashed"></div>
+                <div className="route-dot destination"></div>
+              </div>
+              <div className="route-details">
+                <div className="location-pill-premium">
+                  <span className="loc-label">PICKUP</span>
+                  <span className="loc-value">{ride.pickupLocation?.address}</span>
+                </div>
+                <div className="location-pill-premium">
+                  <span className="loc-label">DESTINATION</span>
+                  <span className="loc-value">{ride.dropoffLocation?.address}</span>
+                </div>
               </div>
             </div>
 
-            <div className="ride-meta-info">
-              <div className="time-info">
-                <span className="meta-date">{formatDate(ride.createdAt)}</span>
-                <span className="meta-time">{formatTime(ride.createdAt)}</span>
-              </div>
-              <div className="price-info">
-                <span className="price-value">${ride.fare?.total?.toFixed(2)}</span>
-              </div>
+            <div className="card-footer-premium">
+              <span className={`status-pill ${ride.status}`}>{ride.status}</span>
+              <button className="view-details-txt">View Details</button>
             </div>
           </div>
         ))}
