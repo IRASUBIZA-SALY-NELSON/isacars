@@ -37,7 +37,7 @@ const Icon = ({ name, size = 18, color = "currentColor" }) => {
     user:      <svg {...w} viewBox="0 0 24 24" {...p}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
     users:     <svg {...w} viewBox="0 0 24 24" {...p}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
     trending:  <svg {...w} viewBox="0 0 24 24" {...p}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
-    dollar:    <svg {...w} viewBox="0 0 24 24" {...p}><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>,
+    dollar:    <svg {...w} viewBox="0 0 24 24" {...p}><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>, // Banknote icon
     settings:  <svg {...w} viewBox="0 0 24 24" {...p}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
     bell:      <svg {...w} viewBox="0 0 24 24" {...p}><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
     search:    <svg {...w} viewBox="0 0 24 24" {...p}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
@@ -63,26 +63,26 @@ const Icon = ({ name, size = 18, color = "currentColor" }) => {
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const revenueData = [
-  { month:"Jan", revenue:12400, rides:340, expenses:4200 },
-  { month:"Feb", revenue:15800, rides:420, expenses:5100 },
-  { month:"Mar", revenue:13200, rides:380, expenses:4800 },
-  { month:"Apr", revenue:18900, rides:510, expenses:6200 },
-  { month:"May", revenue:22100, rides:630, expenses:7300 },
-  { month:"Jun", revenue:19500, rides:570, expenses:6800 },
-  { month:"Jul", revenue:25300, rides:720, expenses:8100 },
-  { month:"Aug", revenue:28700, rides:810, expenses:9400 },
-  { month:"Sep", revenue:24100, rides:680, expenses:7900 },
-  { month:"Oct", revenue:21800, rides:610, expenses:7100 },
-  { month:"Nov", revenue:17600, rides:490, expenses:5800 },
-  { month:"Dec", revenue:30200, rides:870, expenses:9800 },
+  { month:"Jan", revenue:12400000, rides:340, expenses:4200000 },
+  { month:"Feb", revenue:15800000, rides:420, expenses:5100000 },
+  { month:"Mar", revenue:13200000, rides:380, expenses:4800000 },
+  { month:"Apr", revenue:18900000, rides:510, expenses:6200000 },
+  { month:"May", revenue:22100000, rides:630, expenses:7300000 },
+  { month:"Jun", revenue:19500000, rides:570, expenses:6800000 },
+  { month:"Jul", revenue:25300000, rides:720, expenses:8100000 },
+  { month:"Aug", revenue:28700000, rides:810, expenses:9400000 },
+  { month:"Sep", revenue:24100000, rides:680, expenses:7900000 },
+  { month:"Oct", revenue:21800000, rides:610, expenses:7100000 },
+  { month:"Nov", revenue:17600000, rides:490, expenses:5800000 },
+  { month:"Dec", revenue:30200000, rides:870, expenses:9800000 },
 ];
 const locationData = [
-  { city:"New York",    rides:3200, revenue:89000, drivers:45 },
-  { city:"Los Angeles", rides:2800, revenue:74000, drivers:38 },
-  { city:"Chicago",     rides:1900, revenue:52000, drivers:26 },
-  { city:"Houston",     rides:1400, revenue:38000, drivers:19 },
-  { city:"Miami",       rides:2100, revenue:61000, drivers:28 },
-  { city:"Seattle",     rides:1600, revenue:44000, drivers:21 },
+  { city:"Kigali",    rides:3200, revenue:89000000, drivers:45 },
+  { city:"Rubavu",    rides:2800, revenue:74000000, drivers:38 },
+  { city:"Musanze",   rides:1900, revenue:52000000, drivers:26 },
+  { city:"Huye",      rides:1400, revenue:38000000, drivers:19 },
+  { city:"Rwamagana", rides:2100, revenue:61000000, drivers:28 },
+  { city:"Nyagatare", rides:1600, revenue:44000000, drivers:21 },
 ];
 const peakHoursData = [
   {hour:"00",rides:45},{hour:"02",rides:22},{hour:"04",rides:25},
@@ -106,19 +106,19 @@ const radarData = [
   {subject:"Cancel",      A:90,B:70},
 ];
 const recentRides = [
-  {id:"#1042",passenger:"James Miller",driver:"Mike Smith",   from:"Manhattan",   to:"Brooklyn", status:"completed",fare:"$24.50",time:"2 min ago"},
-  {id:"#1041",passenger:"Sarah Chen",  driver:"Sarah Connor", from:"LAX Airport", to:"Hollywood",status:"active",   fare:"$38.00",time:"8 min ago"},
-  {id:"#1040",passenger:"Bob Wilson",  driver:"James Bond",   from:"Downtown",    to:"Airport",  status:"pending",  fare:"$0.00", time:"12 min ago"},
-  {id:"#1039",passenger:"Emma Davis",  driver:"Mike Smith",   from:"Central Park",to:"Times Sq", status:"completed",fare:"$18.00",time:"25 min ago"},
-  {id:"#1038",passenger:"Carlos Ruiz", driver:"Ana Lima",     from:"JFK",         to:"Midtown",  status:"completed",fare:"$52.00",time:"41 min ago"},
-  {id:"#1037",passenger:"Lisa Park",   driver:"Tom Knight",   from:"Soho",        to:"Bronx",    status:"cancelled",fare:"$0.00", time:"58 min ago"},
+  {id:"#1042",passenger:"James Miller",driver:"Mike Smith",   from:"Kimihurura",  to:"Nyarutarama", status:"completed",fare:"24,500 RWF",time:"2 min ago"},
+  {id:"#1041",passenger:"Sarah Chen",  driver:"Sarah Connor", from:"Remera",      to:"Kacyiru",     status:"active",   fare:"38,000 RWF",time:"8 min ago"},
+  {id:"#1040",passenger:"Bob Wilson",  driver:"James Bond",   from:"Kigali City", to:"Airport",     status:"pending",  fare:"0 RWF",      time:"12 min ago"},
+  {id:"#1039",passenger:"Emma Davis",  driver:"Mike Smith",   from:"Nyabugogo",   to:"City Center", status:"completed",fare:"18,000 RWF",time:"25 min ago"},
+  {id:"#1038",passenger:"Carlos Ruiz", driver:"Ana Lima",     from:"Airport",     to:"Kiyovu",      status:"completed",fare:"52,000 RWF",time:"41 min ago"},
+  {id:"#1037",passenger:"Lisa Park",   driver:"Tom Knight",   from:"Gikondo",     to:"Kicukiro",    status:"cancelled",fare:"0 RWF",      time:"58 min ago"},
 ];
 const drivers = [
-  {id:"D001",name:"Mike Smith",   initials:"MS",rating:4.8,rides:156,status:"online", earnings:"$4,280",vehicle:"Toyota Camry",    location:"Manhattan"},
-  {id:"D002",name:"Sarah Connor", initials:"SC",rating:4.9,rides:89, status:"busy",   earnings:"$2,910",vehicle:"Honda Accord",    location:"Brooklyn"},
-  {id:"D003",name:"James Bond",   initials:"JB",rating:5.0,rides:42, status:"offline",earnings:"$1,640",vehicle:"BMW 5 Series",    location:"Queens"},
-  {id:"D004",name:"Ana Lima",     initials:"AL",rating:4.7,rides:203,status:"online", earnings:"$5,720",vehicle:"Ford Fusion",     location:"Bronx"},
-  {id:"D005",name:"Tom Knight",   initials:"TK",rating:4.6,rides:118,status:"online", earnings:"$3,390",vehicle:"Chevrolet Malibu",location:"Staten Is."},
+  {id:"D001",name:"Mike Smith",   initials:"MS",rating:4.8,rides:156,status:"online", earnings:"4,280,000 RWF",vehicle:"Toyota Camry",    location:"Kimihurura"},
+  {id:"D002",name:"Sarah Connor", initials:"SC",rating:4.9,rides:89, status:"busy",   earnings:"2,910,000 RWF",vehicle:"Honda Accord",    location:"Kacyiru"},
+  {id:"D003",name:"James Bond",   initials:"JB",rating:5.0,rides:42, status:"offline",earnings:"1,640,000 RWF",vehicle:"BMW 5 Series",    location:"Nyarutarama"},
+  {id:"D004",name:"Ana Lima",     initials:"AL",rating:4.7,rides:203,status:"online", earnings:"5,720,000 RWF",vehicle:"Ford Fusion",     location:"Remera"},
+  {id:"D005",name:"Tom Knight",   initials:"TK",rating:4.6,rides:118,status:"online", earnings:"3,390,000 RWF",vehicle:"Chevrolet Malibu",location:"Kiyovu"},
 ];
 const vehicles = [
   {id:"V001",plate:"NYC-1042",model:"Toyota Camry 2023", driver:"Mike Smith",   status:"active",     mileage:"48,210 km",lastService:"Jan 15",fuel:72, lat:40.7589,lng:-73.9851},
@@ -306,7 +306,7 @@ const OverviewPage = () => {
         <StatCard icon="users"    label="Total Users"    value="1,284"    sub="+48 this month"     trend={12}/>
         <StatCard icon="car"      label="Active Drivers" value="45"       sub="12 on ride now"     trend={8}/>
         <StatCard icon="activity" label="Total Rides"    value="8,920"    sub="892 this month"     trend={23}/>
-        <StatCard icon="dollar"   label="Total Revenue"  value="$154,300" sub="$15,430 this month" trend={17}/>
+        <StatCard icon="dollar"   label="Total Revenue"  value="154.3M RWF" sub="15.4M RWF this month" trend={17}/>
       </div>
 
       <Card title="Revenue & Ride Volume" subtitle="Monthly performance across the year"
@@ -403,7 +403,7 @@ const OverviewPage = () => {
               <defs><linearGradient id="bG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={C.green}/><stop offset="100%" stopColor={C.greenDk}/></linearGradient></defs>
               <CartesianGrid strokeDasharray="3 3" stroke={C.border} vertical={false}/>
               <XAxis dataKey="city" tick={{fill:C.muted,fontSize:10}} axisLine={false} tickLine={false}/>
-              <YAxis tick={{fill:C.muted,fontSize:10}} axisLine={false} tickLine={false} tickFormatter={v=>`$${(v/1000).toFixed(0)}k`}/>
+              <YAxis tick={{fill:C.muted,fontSize:10}} axisLine={false} tickLine={false} tickFormatter={v=>`${(v/1000000).toFixed(0)}M`}/>
               <Tooltip content={<TT/>}/>
               <Bar dataKey="revenue" name="Revenue" radius={[5,5,0,0]} fill="url(#bG)"/>
             </BarChart>

@@ -50,7 +50,7 @@ const Icon = ({ name, size = 18, color = "currentColor" }) => {
     car:       <svg {...w} viewBox="0 0 24 24" {...p}><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>,
     user:      <svg {...w} viewBox="0 0 24 24" {...p}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
     trending:  <svg {...w} viewBox="0 0 24 24" {...p}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
-    dollar:    <svg {...w} viewBox="0 0 24 24" {...p}><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>,
+    dollar:    <svg {...w} viewBox="0 0 24 24" {...p}><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>, // Banknote icon
     star:      <svg {...w} viewBox="0 0 24 24" fill={color} stroke={color} strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
     activity:  <svg {...w} viewBox="0 0 24 24" {...p}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>,
     history:   <svg {...w} viewBox="0 0 24 24" {...p}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>,
@@ -147,8 +147,8 @@ const DriverDashboard = () => {
               <div style={{fontSize:9,color:"rgba(255,255,255,0.7)",textTransform:"uppercase"}}>Trips</div>
             </div>
             <div style={{textAlign:"center"}}>
-              <div style={{fontSize:16,fontWeight:700,color:"#fff",marginBottom:2}}>${earnings?.total || '1250.5'}</div>
-              <div style={{fontSize:9,color:"rgba(255,255,255,0.7)",textTransform:"uppercase"}}>Earned</div>
+              <div style={{fontSize:16,fontWeight:700,color:"#fff",marginBottom:2}}>{earnings?.total?.toLocaleString() || '1,250,500'}</div>
+              <div style={{fontSize:9,color:"rgba(255,255,255,0.7)",textTransform:"uppercase"}}>RWF Earned</div>
             </div>
           </div>
         </div>
@@ -239,7 +239,7 @@ const DriverDashboard = () => {
           <div className="custom-toast-request">
              <div className="toast-header">
                 <span>New Ride Request</span>
-                <span className="toast-price">${ride.fare.total}</span>
+                <span className="toast-price">{ride.fare.total} RWF</span>
              </div>
              <div className="toast-body">
                 <p>Pickup: {ride.pickupLocation.address}</p>
@@ -298,8 +298,8 @@ const DriverDashboard = () => {
       const response = await api.get('/drivers/earnings');
       setEarnings(response.data.earnings);
     } catch (error) {
-       // Mock for display if API fails (common in dev often)
-       setEarnings({ rating: 4.9, totalRides: 154, total: 1250.50 });
+        // Mock for display if API fails (common in dev often)
+        setEarnings({ rating: 4.9, totalRides: 154, total: 1250500 });
     }
   };
 
@@ -415,7 +415,7 @@ const DriverDashboard = () => {
                   <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16,fontWeight:600,color:C.text}}>
                      <Icon name="bell" size={20} color={C.green}/>
                      <span>New Opportunity</span>
-                     <span style={{marginLeft:"auto",fontSize:18,fontWeight:700,color:C.green}}>${pendingRequests[0].fare.total}</span>
+                     <span style={{marginLeft:"auto",fontSize:18,fontWeight:700,color:C.green}}>{pendingRequests[0].fare.total} RWF</span>
                   </div>
                   <div style={{marginBottom:24}}>
                      <div style={{display:"flex",alignItems:"center",gap:12,fontSize:14,color:C.textSoft,marginBottom:12}}>
@@ -475,7 +475,7 @@ const DriverDashboard = () => {
                       fontWeight:700,
                       textTransform:"uppercase"
                     }}>{activeRide.status.replace('_', ' ')}</div>
-                    <div style={{fontSize:18,fontWeight:700,color:C.text}}>${activeRide.fare.total}</div>
+                    <div style={{fontSize:18,fontWeight:700,color:C.text}}>{activeRide.fare.total} RWF</div>
                   </div>
                   <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:24}}>
                      <div style={{

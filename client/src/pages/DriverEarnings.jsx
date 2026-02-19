@@ -28,7 +28,7 @@ const Icon = ({ name, size = 18, color = "currentColor" }) => {
   const icons = {
     arrowLeft: <svg {...w} viewBox="0 0 24 24" {...p}><polyline points="19 12 5 12 12 19"/><polyline points="5 12 19 12 12 5"/></svg>,
     trending:  <svg {...w} viewBox="0 0 24 24" {...p}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
-    dollar:    <svg {...w} viewBox="0 0 24 24" {...p}><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>,
+    dollar:    <svg {...w} viewBox="0 0 24 24" {...p}><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>, // Banknote icon
     calendar:  <svg {...w} viewBox="0 0 24 24" {...p}><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
     download:  <svg {...w} viewBox="0 0 24 24" {...p}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
     car:       <svg {...w} viewBox="0 0 24 24" {...p}><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>,
@@ -43,16 +43,16 @@ const DriverEarnings = () => {
 
   // Mock Earnings Data
   const weeklyEarnings = [
-    { day: 'Mon', amount: 120 },
-    { day: 'Tue', amount: 145 },
-    { day: 'Wed', amount: 90 },
-    { day: 'Thu', amount: 200 },
-    { day: 'Fri', amount: 250 },
-    { day: 'Sat', amount: 310 },
-    { day: 'Sun', amount: 180 },
+    { day: 'Mon', amount: 120000 },
+    { day: 'Tue', amount: 145000 },
+    { day: 'Wed', amount: 90000 },
+    { day: 'Thu', amount: 200000 },
+    { day: 'Fri', amount: 250000 },
+    { day: 'Sat', amount: 310000 },
+    { day: 'Sun', amount: 180000 },
   ];
 
-  const totalWeekly = weeklyEarnings.reduce((acc, curr) => acc + curr.amount, 0);
+  const totalWeekly = weeklyEarnings.reduce((acc, curr) => acc + curr.amount, 0).toLocaleString();
 
   return (
     <div style={{display:"flex",height:"100vh",background:C.bg,color:C.text,fontFamily:"'Segoe UI',system-ui,sans-serif",overflow:"hidden"}}>
@@ -97,7 +97,7 @@ const DriverEarnings = () => {
               boxShadow: `0 10px 20px ${C.green}40`
           }}>
               <div style={{ fontSize: 14, opacity: 0.9, marginBottom: 8 }}>TOTAL BALANCE</div>
-              <div style={{ fontSize: 36, fontWeight: 700, marginBottom: 24 }}>${user?.driverDetails?.earnings || '1,250.50'}</div>
+              <div style={{ fontSize: 36, fontWeight: 700, marginBottom: 24 }}>{user?.driverDetails?.earnings?.toLocaleString() || '1,250,500'} RWF</div>
 
               <div style={{ display: 'flex', gap: 12 }}>
                   <button style={{
@@ -134,7 +134,7 @@ const DriverEarnings = () => {
           <div style={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:16,padding:24,boxShadow:"0 1px 4px rgba(0,0,0,0.06)",marginBottom:24}}>
               <div style={{display:"flex",justifyContent:"space-between",marginBottom:16,alignItems:"center"}}>
                   <h3 style={{margin:0,color:C.text,fontSize:16,fontWeight:700}}>Weekly Report</h3>
-                  <span style={{fontSize:14,color:C.green,fontWeight:600}}>${totalWeekly}</span>
+                  <span style={{fontSize:14,color:C.green,fontWeight:600}}>{totalWeekly} RWF</span>
               </div>
 
               <div style={{display:"flex",alignItems:"flex-end",height:150,gap:12}}>
@@ -179,7 +179,7 @@ const DriverEarnings = () => {
                           </div>
                       </div>
                       <div style={{textAlign:"right"}}>
-                          <div style={{fontWeight:700,color:C.green,fontSize:14}}>$24.50</div>
+                          <div style={{fontWeight:700,color:C.green,fontSize:14}}>24,500 RWF</div>
                           <div style={{fontSize:12,color:C.muted}}>Completed</div>
                       </div>
                   </div>

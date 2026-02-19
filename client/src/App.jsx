@@ -10,11 +10,15 @@ import DriverDashboard from './pages/DriverDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import RideHistory from './pages/RideHistory';
 import RideDetails from './pages/RideDetails';
-import WalletPayment from './pages/WalletPayment';
-import Rewards from './pages/Rewards';
 import DriverEarnings from './pages/DriverEarnings';
+import Profile from './pages/Profile';
+import SafetyCenter from './pages/SafetyCenter';
+import HelpSupport from './pages/HelpSupport';
 import DriverProfile from './pages/DriverProfile';
 import DriverVehicle from './pages/DriverVehicle';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import OTPLogin from './pages/OTPLogin';
 
 // Device Detection Component
 const DeviceAuthPage = () => {
@@ -132,6 +136,9 @@ function App() {
               </PublicRoute>
             }
           />
+          <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+          <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
+          <Route path="/otp-login" element={<PublicRoute><OTPLogin /></PublicRoute>} />
 
           {/* Protected Routes - Passenger */}
           <Route
@@ -159,18 +166,26 @@ function App() {
             }
           />
           <Route
-            path="/passenger/wallet"
+            path="/passenger/profile"
             element={
               <ProtectedRoute requiredRole="passenger">
-                <WalletPayment />
+                <Profile />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/passenger/rewards"
+            path="/passenger/safety"
             element={
               <ProtectedRoute requiredRole="passenger">
-                <Rewards />
+                <SafetyCenter />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/passenger/support"
+            element={
+              <ProtectedRoute requiredRole="passenger">
+                <HelpSupport />
               </ProtectedRoute>
             }
           />

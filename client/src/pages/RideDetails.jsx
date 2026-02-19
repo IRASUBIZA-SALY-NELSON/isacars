@@ -52,7 +52,7 @@ const RideDetails = () => {
         vehiclePlate: 'SFX-8326'
       }
     },
-    fare: { total: 5.75 },
+    fare: { total: 5750 },
     paymentMethod: 'card'
   });
 
@@ -158,7 +158,7 @@ const RideDetails = () => {
 
         <div className="fare-footer">
           <span className="total-label">Total Fare</span>
-          <span className="total-value">${ride.fare?.total?.toFixed(2)}</span>
+          <span className="total-value">{ride.fare?.total?.toLocaleString()} RWF</span>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Navigation, DollarSign, Clock, Star, LogOut, User, History, Menu, X, Car, Bike, Zap, Shield } from 'lucide-react';
+import { MapPin, Navigation, DollarSign, Clock, Star, LogOut, User, History, Menu, X, Car, Bike, Zap, Shield, Settings, HelpCircle, MessageCircle, AlertTriangle } from 'lucide-react';
 import api from '../utils/api';
 import socketService from '../services/socket';
 import MapComponent from '../components/MapComponent';
@@ -112,17 +112,17 @@ const PassengerDashboard = () => {
     const duration = Math.random() * 30 + 10; // 10-40 minutes
 
     const baseFares = {
-      economy: 3,
-      premium: 5,
-      suv: 7,
-      bike: 2
+      economy: 3000,
+      premium: 5000,
+      suv: 7000,
+      bike: 1000
     };
 
     const perKmRates = {
-      economy: 1.5,
-      premium: 2.5,
-      suv: 3,
-      bike: 1
+      economy: 1500,
+      premium: 2500,
+      suv: 3000,
+      bike: 500
     };
 
     const baseFare = baseFares[bookingData.vehicleType];
@@ -132,7 +132,7 @@ const PassengerDashboard = () => {
     setFareEstimate({
       distance: distance.toFixed(1),
       duration: Math.round(duration),
-      total: total.toFixed(2)
+      total: Math.round(total)
     });
   };
 
@@ -263,13 +263,17 @@ const PassengerDashboard = () => {
             <History size={20} />
             <span>Ride History</span>
           </div>
-          <div className="menu-item" onClick={() => navigate('/passenger/wallet')}>
-            <DollarSign size={20} />
-            <span>Wallet / Payment</span>
+          <div className="menu-item" onClick={() => navigate('/passenger/profile')}>
+            <User size={20} />
+            <span>Profile Settings</span>
           </div>
-          <div className="menu-item" onClick={() => navigate('/passenger/rewards')}>
-            <Star size={20} />
-            <span>Rewards</span>
+          <div className="menu-item" onClick={() => navigate('/passenger/safety')}>
+            <Shield size={20} />
+            <span>Safety Center</span>
+          </div>
+          <div className="menu-item" onClick={() => navigate('/passenger/support')}>
+            <HelpCircle size={20} />
+            <span>Help & Support</span>
           </div>
         </div>
 
@@ -338,7 +342,7 @@ const PassengerDashboard = () => {
                  <div className="fare-display">
                     <div>
                         <div className="text-xs text-gray-500">Estimate</div>
-                        <div className="fare-value">${fareEstimate.total}</div>
+                        <div className="fare-value">{fareEstimate.total} RWF</div>
                     </div>
                     <div>
                          <div className="text-xs text-gray-500">Time</div>
@@ -368,7 +372,7 @@ const PassengerDashboard = () => {
                     {activeRide.status === 'pending' && <span className="pulse-dot"></span>}
                     {activeRide.status === 'pending' ? 'Searching for drivers' : activeRide.status.toUpperCase()}
                   </div>
-                  <h2 className="price-tag-premium">${activeRide.fare.total}</h2>
+                  <h2 className="price-tag-premium">{activeRide.fare.total} RWF</h2>
                 </div>
                 <div className={`vehicle-icon-large-premium type-${activeRide.vehicleType}`}>
                    {activeRide.vehicleType === 'economy' && <Car size={40} strokeWidth={1.5} />}

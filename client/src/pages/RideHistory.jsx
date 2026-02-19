@@ -40,7 +40,7 @@ const RideHistory = () => {
       status: 'completed',
       pickupLocation: { address: 'kigali' },
       dropoffLocation: { address: 'gisenyi' },
-      fare: { total: 20.48 },
+      fare: { total: 20000 },
       createdAt: '2026-02-13T10:34:00Z',
     },
     {
@@ -48,7 +48,7 @@ const RideHistory = () => {
       status: 'completed',
       pickupLocation: { address: 'kingogo' },
       dropoffLocation: { address: 'mukamira' },
-      fare: { total: 16.56 },
+      fare: { total: 16500 },
       createdAt: '2026-02-13T10:21:00Z',
     }
   ];
@@ -77,7 +77,7 @@ const RideHistory = () => {
   };
 
   const totalRides = rides.filter(r => r.status === 'completed').length;
-  const totalSpent = rides.filter(r => r.status === 'completed').reduce((sum, r) => sum + r.fare.total, 0).toFixed(2);
+  const totalSpent = rides.filter(r => r.status === 'completed').reduce((sum, r) => sum + r.fare.total, 0).toLocaleString();
 
   const handleBack = () => {
     navigate(user?.role === 'driver' ? '/driver/dashboard' : '/passenger/dashboard');
@@ -133,7 +133,7 @@ const RideHistory = () => {
           <div className="summary-card-premium">
             <div className="card-icon green"><DollarSign size={20} /></div>
             <div className="card-content">
-              <span className="card-value">${totalSpent}</span>
+              <span className="card-value">{totalSpent} RWF</span>
               <span className="card-label">Total {user?.role === 'driver' ? 'Earned' : 'Spent'}</span>
             </div>
           </div>
@@ -174,7 +174,7 @@ const RideHistory = () => {
                 <Clock size={12} />
                 <span>{formatDate(ride.createdAt)} • {formatTime(ride.createdAt)}</span>
               </div>
-              <div className="ride-price-badge">${ride.fare?.total?.toFixed(2)}</div>
+              <div className="ride-price-badge">{ride.fare?.total?.toLocaleString()} RWF</div>
             </div>
 
             <div className="ride-route-premium">

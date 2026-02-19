@@ -349,7 +349,7 @@ const LandingPage = () => {
                     <img src={car.image} alt={car.name} className="vehicle-image-small" />
                 </div>
                 <h3>{car.name}</h3>
-                <p className="vehicle-price">${(car.id * 0.5 + 1).toFixed(2)}/km</p>
+                <p className="vehicle-price">{(car.id * 500 + 1000).toLocaleString()} RWF/km</p>
                 <p className="vehicle-capacity">
                   <Star size={14} fill="currentColor" style={{color: '#FFB800'}} />
                   <span>{car.stats.passengers} Seats available</span>
