@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Navigation, DollarSign, Clock, Star, LogOut, User, History, Menu, X, Car } from 'lucide-react';
+import { MapPin, Navigation, DollarSign, Clock, Star, LogOut, User, History, Menu, X, Car, Bike, Zap, Shield } from 'lucide-react';
 import api from '../utils/api';
 import socketService from '../services/socket';
 import MapComponent from '../components/MapComponent';
@@ -23,18 +23,35 @@ const PassengerDashboard = () => {
     paymentMethod: 'cash'
   });
   const [fareEstimate, setFareEstimate] = useState(null);
+  const [nearbyDriver, setNearbyDriver] = useState(null);
 
   useEffect(() => {
     fetchActiveRide();
     fetchRideHistory();
     setupSocketListeners();
 
+    let interval;
+    if (activeRide?.status === 'pending') {
+      // Simulate finding nearby drivers
+      interval = setInterval(() => {
+        const dummyDrivers = [
+          { name: 'Jean-Paul', rating: 4.8, vehicle: 'Toyota Corolla', plate: 'RAE 123A', avatar: 'https://i.pravatar.cc/150?u=jp' },
+          { name: 'Sylvie M.', rating: 4.9, vehicle: 'Hyundai Sonata', plate: 'RAD 456B', avatar: 'https://i.pravatar.cc/150?u=sm' },
+          { name: 'Eric K.', rating: 4.7, vehicle: 'Volkswagen Golf', plate: 'RAC 789C', avatar: 'https://i.pravatar.cc/150?u=ek' }
+        ];
+        setNearbyDriver(dummyDrivers[Math.floor(Math.random() * dummyDrivers.length)]);
+      }, 5000);
+    } else {
+      setNearbyDriver(null);
+    }
+
     return () => {
       socketService.off('rideAccepted');
       socketService.off('rideStatusUpdated');
       socketService.off('rideCancelled');
+      if (interval) clearInterval(interval);
     };
-  }, []);
+  }, [activeRide?.status]);
 
   const setupSocketListeners = () => {
     socketService.on('rideAccepted', (ride) => {
@@ -306,12 +323,12 @@ const PassengerDashboard = () => {
                     className={`vehicle-option ${bookingData.vehicleType === type ? 'selected' : ''}`}
                     onClick={() => setBookingData({...bookingData, vehicleType: type})}
                   >
-                    <span className="vehicle-emoji">
-                      {type === 'economy' && '🚗'}
-                      {type === 'premium' && '🚙'}
-                      {type === 'suv' && '🚐'}
-                      {type === 'bike' && '🏍️'}
-                    </span>
+                    <div className="vehicle-icon-wrapper">
+                      {type === 'economy' && <Car size={24} />}
+                      {type === 'premium' && <Zap size={24} />}
+                      {type === 'suv' && <Shield size={24} />}
+                      {type === 'bike' && <Bike size={24} />}
+                    </div>
                     <span className="vehicle-name capitalize">{type}</span>
                   </div>
                 ))}
@@ -343,38 +360,98 @@ const PassengerDashboard = () => {
 
         {/* Active Ride Card */}
         {activeRide && (
-           <div className="panel-card active-ride">
-              <div className="flex justify-between items-center mb-4">
-                  <div className={`badge badge-${getStatusColor(activeRide.status)}`}>
-                    {activeRide.status === 'pending' ? 'Finding Driver...' : activeRide.status}
+           <div className="panel-card active-ride-premium">
+              {/* Header: Status and Price */}
+              <div className="flex justify-between items-start mb-6">
+                <div>
+                  <div className={`status-badge-premium ${activeRide.status}`}>
+                    {activeRide.status === 'pending' && <span className="pulse-dot"></span>}
+                    {activeRide.status === 'pending' ? 'Searching for drivers' : activeRide.status.toUpperCase()}
                   </div>
-                  <div className="font-bold text-xl">${activeRide.fare.total}</div>
+                  <h2 className="price-tag-premium">${activeRide.fare.total}</h2>
+                </div>
+                <div className={`vehicle-icon-large-premium type-${activeRide.vehicleType}`}>
+                   {activeRide.vehicleType === 'economy' && <Car size={40} strokeWidth={1.5} />}
+                   {activeRide.vehicleType === 'premium' && <Zap size={40} strokeWidth={1.5} />}
+                   {activeRide.vehicleType === 'suv' && <Shield size={40} strokeWidth={1.5} />}
+                   {activeRide.vehicleType === 'bike' && <Bike size={40} strokeWidth={1.5} />}
+                </div>
               </div>
 
-              {activeRide.driver && (
-                  <div className="driver-pill">
-                      <img
-                        src={activeRide.driver.avatar || 'https://via.placeholder.com/50'}
-                        alt="Driver"
-                        className="driver-avatar-sm"
-                      />
-                      <div>
-                          <div className="font-bold text-lg">{activeRide.driver.name}</div>
-                          <div className="text-sm text-gray-500">
-                             {activeRide.driver.driverDetails?.vehicleColor} {activeRide.driver.driverDetails?.vehicleModel} ● {activeRide.driver.driverDetails?.vehiclePlate}
+              {/* Driver Section */}
+              {activeRide.driver ? (
+                  <div className="driver-profile-premium">
+                      <div className="avatar-container">
+                        <img
+                          src={activeRide.driver.avatar || 'https://via.placeholder.com/60'}
+                          alt="Driver"
+                          className="driver-avatar-lg"
+                        />
+                        <div className="rating-badge">
+                          <Star size={10} fill="currentColor" />
+                          <span>4.9</span>
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                          <div className="driver-name-row">
+                            <h3>{activeRide.driver.name}</h3>
+                            <div className="contact-actions">
+                               <button className="action-circle-btn"><Clock size={16} /></button>
+                               <button className="action-circle-btn"><Star size={16} /></button>
+                            </div>
+                          </div>
+                          <div className="vehicle-info-text text-gray-500">
+                             {activeRide.driver.driverDetails?.vehicleColor} {activeRide.driver.driverDetails?.vehicleModel}
+                             <span className="plate-pill">{activeRide.driver.driverDetails?.vehiclePlate}</span>
                           </div>
                       </div>
                   </div>
-              )}
+              ) : activeRide.status === 'pending' ? (
+                <div className="nearby-preview-container">
+                  <div className="connecting-info">
+                    <div className="loading-line"></div>
+                    <p>Drivers nearby are seeing your request...</p>
+                  </div>
 
-              <div className="input-group mb-2">
-                 <div className="text-xs text-gray-500 ml-1 mb-1">Destination</div>
-                 <div className="font-bold ml-1">{activeRide.dropoffLocation.address}</div>
+                  {nearbyDriver && (
+                    <div className="nearby-driver-pill animate-in fade-in slide-in-from-right">
+                       <img src={nearbyDriver.avatar} alt="" className="nearby-avatar" />
+                       <div className="flex-1">
+                          <div className="flex justify-between text-xs">
+                             <span className="font-bold">{nearbyDriver.name} is nearby</span>
+                             <span>{nearbyDriver.rating} ★</span>
+                          </div>
+                          <div className="text-[10px] text-gray-400">{nearbyDriver.vehicle} • {nearbyDriver.plate}</div>
+                       </div>
+                    </div>
+                  )}
+                </div>
+              ) : null}
+
+              <div className="destination-row-premium">
+                 <div className="location-indicator">
+                    <div className="dot start"></div>
+                    <div className="line"></div>
+                    <div className="dot end"></div>
+                 </div>
+                 <div className="flex-1">
+                    <div className="location-item">
+                       <span className="label">PICKUP</span>
+                       <span className="value truncate">{activeRide.pickupLocation.address}</span>
+                    </div>
+                    <div className="location-item mt-4">
+                       <span className="label">DESTINATION</span>
+                       <span className="value truncate">{activeRide.dropoffLocation.address}</span>
+                    </div>
+                 </div>
               </div>
 
               {activeRide.status !== 'completed' && activeRide.status !== 'cancelled' && (
-                  <button className="btn btn-danger w-full py-3 rounded-lg mt-2" onClick={handleCancelRide}>
-                      Cancel Ride
+                  <button
+                    className="cancel-btn-subtle"
+                    onClick={handleCancelRide}
+                  >
+                      Cancel Trip
                   </button>
               )}
            </div>
