@@ -243,17 +243,27 @@ const PassengerDashboard = () => {
       {/* Sidebar Drawer */}
       <div className={`app-sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <div className="sidebar-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer', padding: '10px 0 20px', display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid #eee', marginBottom: '20px' }}>
-            <img src="/logo.png" alt="Nova Transport Logo" style={{ height: '32px', width: 'auto' }} />
-            <h2 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#111827', margin: 0 }}>Nova Transport</h2>
+          <div className="sidebar-logo-section" onClick={() => navigate('/')}>
+            <img src="/logo.png" alt="Nova" className="sidebar-logo-img" />
+            <h2 className="sidebar-brand">Nova Transport</h2>
           </div>
+
           <div className="user-profile-summary">
-            <div className="profile-avatar">
-              <User size={24} />
+            <div className="profile-avatar-wrapper">
+              <img
+                src={user?.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop"}
+                alt="Avatar"
+                className="sidebar-avatar"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.style.display = 'none';
+                  e.target.parentNode.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
+                }}
+              />
             </div>
             <div className="profile-info">
-              <h3>{user?.name}</h3>
-              <p>Passenger</p>
+              <h3>{user?.name || 'John Passenger'}</h3>
+              <p>Gold Member</p>
             </div>
           </div>
         </div>
