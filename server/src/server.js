@@ -28,7 +28,7 @@ const httpServer = createServer(app);
 // Socket.io setup
 const io = new Server(httpServer, {
   cors: {
-    origin: ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw', 'https://novatransport.vercel.app/'],
+    origin: ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw', 'https://novatransport.vercel.app'],
     methods: ['GET', 'POST'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -39,7 +39,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // CORS middleware (must come before helmet)
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw', 'https://novatransport.vercel.app/'];
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw', 'https://novatransport.vercel.app'];
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -91,7 +91,7 @@ app.get('/api/health', (req, res) => {
 // Handle preflight requests
 app.options('*', (req, res) => {
   const origin = req.headers.origin;
-  const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw', 'https://novatransport.vercel.app/'];
+  const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174', 'https://novatransport.rw', 'https://novatransport.vercel.app'];
 
   console.log(`CORS OPTIONS request from origin: ${origin} at ${new Date().toISOString()}`);
   console.log('Available origins:', allowedOrigins);
