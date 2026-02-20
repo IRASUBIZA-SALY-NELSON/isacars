@@ -324,3 +324,130 @@ export const updatePassword = async (req, res) => {
     });
   }
 };
+
+// @desc    Delete user account
+// @route   DELETE /api/auth/deleteaccount
+// @access  Private
+export const deleteAccount = async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.user.id);
+    res.status(200).json({
+      success: true,
+      message: 'Account deleted successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// @desc    Update user settings (notifications, security)
+// @route   PUT /api/auth/settings
+// @access  Private
+export const updateSettings = async (req, res) => {
+  try {
+    const { notificationSettings, securitySettings } = req.body;
+
+    const updateData = {};
+    if (notificationSettings) updateData.notificationSettings = notificationSettings;
+    if (securitySettings) updateData.securitySettings = securitySettings;
+
+    const user = await User.findByIdAndUpdate(req.user.id, updateData, {
+      new: true,
+      runValidators: true
+    });
+
+    res.status(200).json({
+      success: true,
+      user
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// @desc    Add trusted contact
+// @route   POST /api/auth/trusted-contacts
+// @access  Private
+export const addTrustedContact = async (req, res) => {
+  try {
+    const { name, phone, relationship, isGuardian } = req.body;
+    const user = await User.findById(req.user.id);
+
+    user.trustedContacts.push({ name, phone, relationship, isGuardian });
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      trustedContacts: user.trustedContacts
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// @desc    Remove trusted contact
+// @route   DELETE /api/auth/trusted-contacts/:id
+// @access  Private
+export const removeTrustedContact = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    user.trustedContacts = user.trustedContacts.filter(
+      contact => contact._id.toString() !== req.params.id
+    );
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      trustedContacts: user.trustedContacts
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    const resetToken = Math.random().toString(36).slice(-8);
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+    await user.save();
+    res.status(200).json({ success: true, data: 'Email sent' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const user = await User.findOne({
+      resetPasswordToken: req.params.resettoken,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+    if (!user) {
+      return res.status(400).json({ success: false, message: 'Invalid token' });
+    }
+    user.password = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+    res.status(200).json({ success: true, message: 'Success' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

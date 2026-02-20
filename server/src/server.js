@@ -18,6 +18,8 @@ dotenv.config();
 import authRoutes from './routes/authRoutes.js';
 import rideRoutes from './routes/rideRoutes.js';
 import driverRoutes from './routes/driverRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+import safetyRoutes from './routes/safetyRoutes.js';
 
 // Connect to database
 connectDB();
@@ -118,6 +120,8 @@ app.options('*', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/drivers', driverRoutes);
 app.use('/api/rides', rideRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/safety', safetyRoutes);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {

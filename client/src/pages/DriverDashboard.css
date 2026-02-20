@@ -245,6 +245,95 @@
   gap: 12px;
 }
 
+/* Enhanced Passenger Details */
+.passenger-section {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.passenger-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.passenger-avatar {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.passenger-details {
+  flex: 1;
+}
+
+.passenger-details h4 {
+  margin: 0 0 4px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--driver-text);
+}
+
+.passenger-contact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--driver-text-muted);
+  font-size: 0.9rem;
+}
+
+.passenger-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fef3c7;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.star-icon {
+  color: #f59e0b;
+}
+
+/* Enhanced Ride Details */
+.ride-details-section {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.ride-info-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.ride-info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  padding: 8px 12px;
+  border-radius: 8px;
+  flex: 1;
+  font-size: 0.85rem;
+  color: var(--driver-text-muted);
+}
+
 .btn-deny {
   flex: 1;
   padding: 14px;
@@ -255,29 +344,36 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .btn-deny:hover {
-  background: #fff1f2;
+  background: #fee2e2;
   border-color: #fecaca;
-  color: #ef4444;
+  transform: translateY(-1px);
 }
 
 .btn-accept {
   flex: 2;
   padding: 14px;
   border-radius: 14px;
-  background: var(--driver-primary);
-  color: white;
   border: none;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: white;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
 }
 
 .btn-accept:hover {
-  background: var(--driver-primary-dark);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
 }

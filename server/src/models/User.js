@@ -122,6 +122,22 @@ const userSchema = new mongoose.Schema({
       default: 0
     }
   },
+  notificationSettings: {
+    pushNotifications: { type: Boolean, default: true },
+    emailUpdates: { type: Boolean, default: true },
+    smsAlerts: { type: Boolean, default: true },
+    locationSharing: { type: Boolean, default: false }
+  },
+  securitySettings: {
+    twoFactorEnabled: { type: Boolean, default: false },
+    biometricEnabled: { type: Boolean, default: false }
+  },
+  trustedContacts: [{
+    name: String,
+    phone: String,
+    relationship: String,
+    isGuardian: { type: Boolean, default: false }
+  }],
   resetPasswordToken: String,
   resetPasswordExpire: Date
 }, {

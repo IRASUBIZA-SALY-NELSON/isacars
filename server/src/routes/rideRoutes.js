@@ -8,7 +8,8 @@ import {
   getRideHistory,
   getRide,
   rateRide,
-  getActiveRide
+  getActiveRide,
+  shareRide
 } from '../controllers/rideController.js';
 import { protect, authorize } from '../middleware/auth.js';
 
@@ -23,5 +24,6 @@ router.put('/:id/accept', protect, authorize('driver'), acceptRide);
 router.put('/:id/status', protect, authorize('driver'), updateRideStatus);
 router.put('/:id/cancel', protect, cancelRide);
 router.post('/:id/rate', protect, rateRide);
+router.post('/:id/share', protect, authorize('passenger'), shareRide);
 
 export default router;

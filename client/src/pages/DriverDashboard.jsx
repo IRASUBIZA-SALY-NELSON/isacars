@@ -238,22 +238,66 @@ const DriverDashboard = () => {
                   <div className="fare-tag">{pendingRequests[0].fare.total} RWF</div>
                 </div>
 
+                {/* Passenger Details */}
+                <div className="passenger-section">
+                  <div className="passenger-info">
+                    <div className="passenger-avatar">
+                      <User size={24} />
+                    </div>
+                    <div className="passenger-details">
+                      <h4 className="passenger-name">{pendingRequests[0].passenger?.name || 'Passenger'}</h4>
+                      <div className="passenger-contact">
+                        <Phone size={14} />
+                        <span>{pendingRequests[0].passenger?.phone || '+250 7XX XXX XXX'}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="passenger-rating">
+                    <Star size={16} className="star-icon" />
+                    <span>{pendingRequests[0].passenger?.rating || '4.5'}</span>
+                  </div>
+                </div>
+
+                {/* Ride Details */}
+                <div className="ride-details-section">
+                  <div className="ride-info-row">
+                    <div className="ride-info-item">
+                      <Car size={16} />
+                      <span>{pendingRequests[0].vehicleType || 'Standard'}</span>
+                    </div>
+                    <div className="ride-info-item">
+                      <Clock size={16} />
+                      <span>{pendingRequests[0].estimatedTime || '15 mins'}</span>
+                    </div>
+                    <div className="ride-info-item">
+                      <Navigation size={16} />
+                      <span>{pendingRequests[0].distance || '5.2 km'}</span>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="route-section-premium">
                   <div className="route-point">
                     <div className="point-dot"></div>
                     <span className="point-label">Pickup Location</span>
-                    <p className="point-address">{pendingRequests[0].pickupLocation.address}</p>
+                    <p className="point-address">{pendingRequests[0].pickupLocation?.address || 'Pickup address'}</p>
                   </div>
                   <div className="route-point">
                     <div className="point-dot dropoff"></div>
                     <span className="point-label">Dropoff Location</span>
-                    <p className="point-address">{pendingRequests[0].dropoffLocation.address}</p>
+                    <p className="point-address">{pendingRequests[0].dropoffLocation?.address || 'Dropoff address'}</p>
                   </div>
                 </div>
 
                 <div className="action-buttons-group">
-                  <button className="btn-deny" onClick={() => denyRide(pendingRequests[0]._id)}>Decline</button>
-                  <button className="btn-accept" onClick={() => acceptRide(pendingRequests[0]._id)}>Accept Ride</button>
+                  <button className="btn-deny" onClick={() => denyRide(pendingRequests[0]._id)}>
+                    <X size={18} />
+                    Decline
+                  </button>
+                  <button className="btn-accept" onClick={() => acceptRide(pendingRequests[0]._id)}>
+                    <CheckCircle size={18} />
+                    Accept Ride
+                  </button>
                 </div>
               </div>
             )}

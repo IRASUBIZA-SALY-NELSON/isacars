@@ -171,3 +171,33 @@ export const uploadDocument = async (req, res) => {
     });
   }
 };
+// @desc    Driver cash out
+// @route   POST /api/drivers/cashout
+// @access  Private (Driver)
+export const cashOut = async (req, res) => {
+  try {
+    const { amount } = req.body;
+    const driver = await User.findById(req.user.id);
+
+    if (driver.driverDetails.earnings < amount) {
+      return res.status(400).json({
+        success: false,
+        message: 'Insufficient balance'
+      });
+    }
+
+    driver.driverDetails.earnings -= amount;
+    await driver.save();
+
+    res.status(200).json({
+      success: true,
+      earnings: driver.driverDetails.earnings,
+      message: `Successfully cashed out ${amount}`
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};

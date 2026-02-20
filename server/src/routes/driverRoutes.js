@@ -4,7 +4,8 @@ import {
   toggleAvailability,
   updateDriverProfile,
   getEarnings,
-  uploadDocument
+  uploadDocument,
+  cashOut
 } from '../controllers/driverController.js';
 import { protect, authorize } from '../middleware/auth.js';
 
@@ -15,5 +16,6 @@ router.put('/availability', protect, authorize('driver'), toggleAvailability);
 router.put('/profile', protect, authorize('driver'), updateDriverProfile);
 router.get('/earnings', protect, authorize('driver'), getEarnings);
 router.post('/documents', protect, authorize('driver'), uploadDocument);
+router.post('/cashout', protect, authorize('driver'), cashOut);
 
 export default router;

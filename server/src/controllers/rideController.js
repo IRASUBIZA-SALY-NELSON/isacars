@@ -502,3 +502,37 @@ export const getActiveRide = async (req, res) => {
     });
   }
 };
+/**
+ * @desc    Share ride details with trusted contacts
+ * @route   POST /api/rides/:id/share
+ * @access  Private (Passenger)
+ */
+export const shareRide = async (req, res) => {
+  try {
+    const ride = await Ride.findById(req.params.id);
+
+    if (!ride) {
+      return res.status(404).json({
+        success: false,
+        message: 'Ride not found'
+      });
+    }
+
+    // Generate a unique share link/token
+    const shareToken = Math.random().toString(36).slice(-10);
+
+    // In a real app, you might save this token to the DB with an expiration
+    // and send it via SMS/Email to trusted contacts.
+
+    res.status(200).json({
+      success: true,
+      shareLink: `https://nova.transport/track/${ride._id}?token=${shareToken}`,
+      message: 'Ride tracking link generated'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
