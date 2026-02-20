@@ -144,16 +144,8 @@ const RideHistory = () => {
       </div>
 
 
-      <div className="search-container" style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '20px 0'
-      }}>
-        <div className="search-wrapper" style={{
-          maxWidth: '500px',
-          width: '100%'
-        }}>
+      <div className="search-container" style={{ padding: '20px 0', width: '100%', maxWidth: '800px', margin: '0 auto' }}>
+        <div className="search-wrapper">
           <Search size={18} className="search-icon-dim" />
           <input
             type="text"

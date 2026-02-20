@@ -7,7 +7,7 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
 }
 
 /* Loading Container - Always Centered */
@@ -42,6 +42,7 @@
 
 /* Header Sections */
 .history-header {
+  width: 100%;
   max-width: 800px;
   margin: 0 auto 40px;
 }
@@ -143,6 +144,7 @@
 
 /* Search Wrapper */
 .search-wrapper {
+  width: 100%;
   max-width: 800px;
   margin: 0 auto;
   position: relative;
@@ -152,6 +154,7 @@
   border: 1px solid #f1f5f9;
   transition: all 0.3s;
   box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+  box-sizing: border-box;
 }
 
 .search-wrapper:focus-within {
@@ -173,6 +176,7 @@
 
 /* Rides List */
 .rides-container {
+  width: 100%;
   max-width: 800px;
   margin: 0 auto;
   display: flex;
@@ -318,7 +322,11 @@
 /* Responsive */
 @media (max-width: 640px) {
   .ride-history-new {
-    padding: 20px 15px;
+    padding: 20px 12px;
+  }
+
+  .history-header {
+    margin: 0 0 24px;
   }
 
   .history-summary-cards {
@@ -331,5 +339,18 @@
 
   .ride-price-badge {
     font-size: 1.1rem;
+  }
+
+  .search-wrapper {
+    max-width: 100%;
+  }
+
+  .rides-container {
+    max-width: 100%;
+  }
+
+  .ride-card-premium {
+    border-radius: 20px;
+    padding: 18px;
   }
 }
