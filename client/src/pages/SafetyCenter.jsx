@@ -1,29 +1,68 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import api from '../utils/api';
 import {
   ArrowLeft, ShieldAlert, Share2, Users,
   PhoneCall, ShieldCheck, ChevronRight,
-  MapPin, Plus, HeartPulse, Info
+  MapPin, Plus, HeartPulse, Info, X
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './SafetyCenter.css';
 
 const SafetyCenter = () => {
+  const { user, updateUser } = useAuth();
   const navigate = useNavigate();
+  const [showAddContact, setShowAddContact] = useState(false);
+  const [newContact, setNewContact] = useState({ name: '', phone: '', relationship: '' });
+  const [loading, setLoading] = useState(false);
 
-  const handleSOS = () => {
+  const handleSOS = async () => {
     toast.loading('Activating emergency protocol...', { duration: 2000 });
-    setTimeout(() => {
-      toast.error('EMERGENCY SOS ACTIVATED. Help is on the way.', {
-        duration: 8000,
-        icon: '🚨',
-        style: {
-          background: '#ef4444',
-          color: '#fff',
-          fontWeight: 'bold',
-          fontSize: '16px'
-        }
-      });
-    }, 2000);
+    try {
+      // In a real app, this would notify emergency services and contacts
+      // await api.post('/safety/sos');
+      setTimeout(() => {
+        toast.error('EMERGENCY SOS ACTIVATED. Help is on the way.', {
+          duration: 8000,
+          icon: '🚨',
+          style: {
+            background: '#ef4444',
+            color: '#fff',
+            fontWeight: 'bold',
+            fontSize: '16px'
+          }
+        });
+      }, 2000);
+    } catch (error) {
+      toast.error('Failed to trigger SOS. Please call emergency services directly.');
+    }
+  };
+
+  const handleAddContact = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await api.post('/auth/trusted-contacts', newContact);
+      updateUser(response.data.user);
+      setShowAddContact(false);
+      setNewContact({ name: '', phone: '', relationship: '' });
+      toast.success('Trusted contact added successfully!');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to add contact');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRemoveContact = async (contactId) => {
+    try {
+      const response = await api.delete(`/auth/trusted-contacts/${contactId}`);
+      updateUser(response.data.user);
+      toast.success('Contact removed');
+    } catch (error) {
+      toast.error('Failed to remove contact');
+    }
   };
 
   const handleToolClick = (toolName, icon = '🛡️') => {
@@ -31,13 +70,11 @@ const SafetyCenter = () => {
       toast.success('Live tracking link shared with trusted contacts!', { icon: '🔗' });
     } else if (toolName === 'Emergency Numbers') {
       toast('Opening local emergency directory...', { icon: '📞' });
+    } else if (toolName === 'Add Contact') {
+      setShowAddContact(true);
     } else {
       toast.success(`${toolName} feature activated!`, { icon });
     }
-  };
-
-  const handleRemoveContact = (name) => {
-    toast(`${name} removed from trusted contacts.`, { icon: '🗑️' });
   };
 
   return (
@@ -100,27 +137,75 @@ const SafetyCenter = () => {
         {/* Trusted Contacts */}
         <h2 className="section-title"><Users size={20} color="#22c55e" /> Trusted Contacts</h2>
         <div className="contacts-list">
-          <div className="contact-item">
-            <div className="contact-avatar">MS</div>
-            <div className="contact-info">
-              <h4>Moses S.</h4>
-              <p>Brother • +250 78x xxx xxx</p>
+          {user?.trustedContacts?.map((contact) => (
+            <div key={contact._id} className="contact-item">
+              <div className="contact-avatar">{contact.name.substring(0, 2).toUpperCase()}</div>
+              <div className="contact-info">
+                <h4>{contact.name}</h4>
+                <p>{contact.relationship} • {contact.phone}</p>
+              </div>
+              <ShieldAlert
+                size={18}
+                color="#ef4444"
+                style={{ cursor: 'pointer' }}
+                onClick={(e) => { e.stopPropagation(); handleRemoveContact(contact._id); }}
+              />
             </div>
-            <ShieldAlert size={18} color="#ef4444" style={{ cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); handleRemoveContact('Moses S.'); }} />
-          </div>
-          <div className="contact-item">
-            <div className="contact-avatar">JK</div>
-            <div className="contact-info">
-              <h4>Julienne K.</h4>
-              <p>Friend • +250 78x xxx xxx</p>
-            </div>
-            <ShieldAlert size={18} color="#ef4444" style={{ cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); handleRemoveContact('Julienne K.'); }} />
-          </div>
-          <button className="btn-add-contact" onClick={() => handleToolClick('Add Contact')}>
+          ))}
+
+          {(!user?.trustedContacts || user.trustedContacts.length === 0) && (
+            <p className="no-data-msg">No trusted contacts added yet.</p>
+          )}
+
+          <button className="btn-add-contact" onClick={() => setShowAddContact(true)}>
             <Plus size={18} />
             Add Trusted Contact
           </button>
         </div>
+
+        {/* Add Contact Modal */}
+        {showAddContact && (
+          <div className="modal-overlay">
+            <div className="modal-card">
+              <div className="modal-header">
+                <h3>Add Trusted Contact</h3>
+                <button onClick={() => setShowAddContact(false)}><X size={20} /></button>
+              </div>
+              <form onSubmit={handleAddContact}>
+                <div className="form-group">
+                  <label>Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={newContact.name}
+                    onChange={e => setNewContact({...newContact, name: e.target.value})}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Phone Number</label>
+                  <input
+                    type="tel"
+                    required
+                    value={newContact.phone}
+                    onChange={e => setNewContact({...newContact, phone: e.target.value})}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Relationship</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Sister"
+                    value={newContact.relationship}
+                    onChange={e => setNewContact({...newContact, relationship: e.target.value})}
+                  />
+                </div>
+                <button type="submit" className="btn-primary" disabled={loading}>
+                  {loading ? 'Adding...' : 'Add Contact'}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
 
         {/* Safety Tips */}
         <h2 className="section-title"><Info size={20} color="#22c55e" /> Safety Guidelines</h2>

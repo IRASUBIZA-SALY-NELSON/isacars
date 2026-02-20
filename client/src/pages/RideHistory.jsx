@@ -27,31 +27,12 @@ const RideHistory = () => {
     } catch (error) {
       console.error('Error fetching ride history:', error);
       toast.error('Failed to load ride history');
-      // Fallback mock data
-      setRides(getMockRideData());
     } finally {
       setLoading(false);
     }
   };
 
-  const getMockRideData = () => [
-    {
-      _id: '1',
-      status: 'completed',
-      pickupLocation: { address: 'kigali' },
-      dropoffLocation: { address: 'gisenyi' },
-      fare: { total: 20000 },
-      createdAt: '2026-02-13T10:34:00Z',
-    },
-    {
-      _id: '2',
-      status: 'completed',
-      pickupLocation: { address: 'kingogo' },
-      dropoffLocation: { address: 'mukamira' },
-      fare: { total: 16500 },
-      createdAt: '2026-02-13T10:21:00Z',
-    }
-  ];
+
 
   const filteredRides = rides.filter(ride => {
     return searchTerm === '' ||

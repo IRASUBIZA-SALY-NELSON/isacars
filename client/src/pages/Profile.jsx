@@ -6,11 +6,12 @@ import {
   Shield, CreditCard, LogOut, ChevronRight, Trash2,
   MapPin, CheckCircle, X
 } from 'lucide-react';
+import api from '../utils/api';
 import toast from 'react-hot-toast';
 import './Profile.css';
 
 const Profile = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -21,10 +22,10 @@ const Profile = () => {
   });
 
   const [formData, setFormData] = useState({
-    name: user?.name || 'Alex Johnson',
-    email: user?.email || 'alex.j@example.com',
-    phone: '+250 788 123 456',
-    address: 'Kigali, Kimihurura'
+    name: user?.name || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
+    address: user?.address || ''
   });
   const [avatar, setAvatar] = useState(user?.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop");
 
@@ -44,28 +45,40 @@ const Profile = () => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const response = await api.put('/auth/updateprofile', formData);
+      updateUser(response.data.user);
       toast.success('Profile updated successfully!');
-    }, 1000);
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to update profile');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = async (e) => {
     e.preventDefault();
     if (passwords.new !== passwords.confirm) {
       toast.error("Passwords don't match!");
       return;
     }
+
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await api.put('/auth/updatepassword', {
+        currentPassword: passwords.current,
+        newPassword: passwords.new
+      });
       setShowPasswordModal(false);
       setPasswords({ current: '', new: '', confirm: '' });
       toast.success('Security credentials updated!', { icon: '🔐' });
-    }, 1500);
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to update password');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleToggle = (setting, status) => {
@@ -80,7 +93,17 @@ const Profile = () => {
       <span>
         Are you sure? <b>This is permanent.</b>
         <button
-          onClick={() => { toast.dismiss(t.id); toast.error('Account deletion requested.'); }}
+          onClick={async () => {
+            toast.dismiss(t.id);
+            try {
+              await api.delete('/auth/deleteaccount');
+              logout();
+              navigate('/');
+              toast.success('Account deleted successfully');
+            } catch (error) {
+              toast.error('Failed to delete account');
+            }
+          }}
           style={{marginLeft: '10px', background: '#ef4444', color: 'white', border: 'none', padding: '4px 8px', borderRadius: '4px', fontSize: '12px'}}
         >
           Confirm

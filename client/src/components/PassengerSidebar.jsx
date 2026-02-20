@@ -50,7 +50,7 @@ const PassengerSidebar = ({ isOpen, onClose, currentPage }) => {
             </div>
             <div className="profile-info">
               <h3>{user?.name || 'Passenger'}</h3>
-              <p>Gold Member</p>
+              <p className="capitalize text-xs opacity-70">{user?.role || 'User'}</p>
             </div>
           </div>
         </div>

@@ -38,26 +38,10 @@ const PassengerDashboard = () => {
     fetchRideHistory();
     setupSocketListeners();
 
-    let interval;
-    if (activeRide?.status === 'pending') {
-      // Simulate finding nearby drivers
-      interval = setInterval(() => {
-        const dummyDrivers = [
-          { name: 'Jean-Paul', rating: 4.8, vehicle: 'Toyota Corolla', plate: 'RAE 123A', avatar: 'https://i.pravatar.cc/150?u=jp' },
-          { name: 'Sylvie M.', rating: 4.9, vehicle: 'Hyundai Sonata', plate: 'RAD 456B', avatar: 'https://i.pravatar.cc/150?u=sm' },
-          { name: 'Eric K.', rating: 4.7, vehicle: 'Volkswagen Golf', plate: 'RAC 789C', avatar: 'https://i.pravatar.cc/150?u=ek' }
-        ];
-        setNearbyDriver(dummyDrivers[Math.floor(Math.random() * dummyDrivers.length)]);
-      }, 5000);
-    } else {
-      setNearbyDriver(null);
-    }
-
     return () => {
       socketService.off('rideAccepted');
       socketService.off('rideStatusUpdated');
       socketService.off('rideCancelled');
-      if (interval) clearInterval(interval);
     };
   }, [activeRide?.status]);
 
@@ -122,143 +106,118 @@ const PassengerDashboard = () => {
     }
   };
 
-  // Mock location search function (replace with real API call)
+  // Real location search using Nominatim (OpenStreetMap)
   const searchLocations = async (query, type) => {
     setIsSearchingLocation(true);
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=rw&limit=5`);
+      const data = await response.json();
 
-    // Simulate API delay
-    setTimeout(() => {
-      const mockLocations = [
-        { id: 1, name: 'Kigali City Center', address: 'Kigali, Rwanda', lat: -1.9441, lng: 30.0619 },
-        { id: 2, name: 'Kigali International Airport', address: 'Kigali, Rwanda', lat: -1.9579, lng: 30.0606 },
-        { id: 3, name: 'Kigali Convention Centre', address: 'Kigali, Rwanda', lat: -1.9431, lng: 30.0589 },
-        { id: 4, name: 'Kimironko Market', address: 'Kigali, Rwanda', lat: -1.9369, lng: 30.1225 },
-        { id: 5, name: 'Nyabugogo Bus Terminal', address: 'Kigali, Rwanda', lat: -1.9489, lng: 30.0585 },
-        { id: 6, name: 'Remera Shopping Center', address: 'Kigali, Rwanda', lat: -1.9514, lng: 30.1113 },
-        { id: 7, name: 'Kacyiru Police Station', address: 'Kigali, Rwanda', lat: -1.9278, lng: 30.0998 },
-        { id: 8, name: 'Gisozi Genocide Memorial', address: 'Kigali, Rwanda', lat: -1.9636, lng: 30.0844 }
-      ];
-
-      const filtered = mockLocations.filter(loc =>
-        loc.name.toLowerCase().includes(query.toLowerCase()) ||
-        loc.address.toLowerCase().includes(query.toLowerCase())
-      );
+      const locations = data.map(item => ({
+        id: item.place_id,
+        name: item.display_name.split(',')[0],
+        address: item.display_name,
+        lat: parseFloat(item.lat),
+        lng: parseFloat(item.lon)
+      }));
 
       if (type === 'pickup') {
-        setPickupSuggestions(filtered);
+        setPickupSuggestions(locations);
       } else {
-        setDropoffSuggestions(filtered);
+        setDropoffSuggestions(locations);
       }
-
+    } catch (error) {
+      console.error('Location search error:', error);
+    } finally {
       setIsSearchingLocation(false);
-    }, 500);
+    }
   };
 
   const selectLocation = (location, type) => {
     if (type === 'pickup') {
-      setBookingData({...bookingData, pickupAddress: location.name});
+      const updatedData = {...bookingData, pickupAddress: location.name, pickupCoords: [location.lng, location.lat]};
+      setBookingData(updatedData);
       setPickupSuggestions([]);
+      if (updatedData.dropoffAddress) calculateRoute(updatedData);
     } else {
-      setBookingData({...bookingData, dropoffAddress: location.name});
+      const updatedData = {...bookingData, dropoffAddress: location.name, dropoffCoords: [location.lng, location.lat]};
+      setBookingData(updatedData);
       setDropoffSuggestions([]);
-    }
-
-    // Calculate route if both locations are selected
-    if (bookingData.pickupAddress && bookingData.dropoffAddress) {
-      calculateRoute();
+      if (updatedData.pickupAddress) calculateRoute(updatedData);
     }
   };
 
-  const calculateRoute = () => {
-    // Mock route calculation (replace with real API)
-    const distance = Math.random() * 15 + 2; // 2-17 km
-    const duration = distance * 3 + 5; // Rough estimate
+  const calculateRoute = async (data = bookingData) => {
+    if (!data.pickupCoords || !data.dropoffCoords) return;
 
-    setRouteDistance({
-      distance: distance.toFixed(1),
-      duration: Math.round(duration),
-      estimatedFare: calculateFare(distance)
-    });
+    try {
+      const response = await fetch(`https://router.project-osrm.org/route/v1/driving/${data.pickupCoords[0]},${data.pickupCoords[1]};${data.dropoffCoords[0]},${data.dropoffCoords[1]}?overview=full&geometries=geojson`);
+      const routeData = await response.json();
+
+      if (routeData.code === 'Ok') {
+        const route = routeData.routes[0];
+        const distance = route.distance / 1000; // to km
+        const duration = route.duration / 60; // to min
+
+        setRouteDistance({
+          distance: distance.toFixed(1),
+          duration: Math.round(duration),
+        });
+
+        // Auto-calculate fare when route is found
+        calculateFare(distance, duration);
+      }
+    } catch (error) {
+      console.error('Route calculation error:', error);
+    }
   };
 
-  const calculateFare = () => {
-    // Simulate fare calculation
-    const distance = Math.random() * 10 + 2; // 2-12 km
-    const duration = Math.random() * 30 + 10; // 10-40 minutes
-
-    const baseFares = {
-      economy: 3000,
-      premium: 5000,
-      suv: 7000,
-      bike: 1000
-    };
-
-    const perKmRates = {
-      economy: 1500,
-      premium: 2500,
-      suv: 3000,
-      bike: 500
-    };
+  const calculateFare = (distance, duration) => {
+    const baseFares = { economy: 1000, premium: 2000, suv: 3000, bike: 500 };
+    const perKmRates = { economy: 500, premium: 800, suv: 1000, bike: 200 };
+    const perMinRates = { economy: 50, premium: 100, suv: 150, bike: 20 };
 
     const baseFare = baseFares[bookingData.vehicleType];
     const distanceFare = distance * perKmRates[bookingData.vehicleType];
-    const total = baseFare + distanceFare;
+    const timeFare = duration * perMinRates[bookingData.vehicleType];
+    const total = baseFare + distanceFare + timeFare;
 
     setFareEstimate({
       distance: distance.toFixed(1),
       duration: Math.round(duration),
       total: Math.round(total)
     });
-    toast.success(`Fare estimated at ${Math.round(total)} RWF`, { icon: '💰' });
   };
 
   const handleBookRide = async (e) => {
     e.preventDefault();
 
-    if (!bookingData.pickupAddress || !bookingData.dropoffAddress) {
-      toast.error('Please enter pickup and dropoff locations');
+    if (!bookingData.pickupAddress || !bookingData.dropoffAddress || !routeDistance) {
+      toast.error('Please select valid pickup and dropoff locations');
       return;
     }
 
     setLoading(true);
 
     try {
-      // Simulate coordinates (NYC area for realism)
-      // [Longitude, Latitude] - GeoJSON format
-      const centerLng = -74.0060;
-      const centerLat = 40.7128;
-
-      const pickupCoords = [
-        centerLng + (Math.random() - 0.5) * 0.1, // +/- ~5km
-        centerLat + (Math.random() - 0.5) * 0.1
-      ];
-
-      const dropoffCoords = [
-        centerLng + (Math.random() - 0.5) * 0.1,
-        centerLat + (Math.random() - 0.5) * 0.1
-      ];
-
-      const distance = Math.random() * 10 + 2;
-      const duration = Math.random() * 30 + 10;
-
       const response = await api.post('/rides', {
         pickupLocation: {
           address: bookingData.pickupAddress,
           coordinates: {
             type: 'Point',
-            coordinates: pickupCoords
+            coordinates: bookingData.pickupCoords
           }
         },
         dropoffLocation: {
           address: bookingData.dropoffAddress,
           coordinates: {
             type: 'Point',
-            coordinates: dropoffCoords
+            coordinates: bookingData.dropoffCoords
           }
         },
         vehicleType: bookingData.vehicleType,
-        distance,
-        duration,
+        distance: parseFloat(routeDistance.distance),
+        duration: routeDistance.duration,
         paymentMethod: bookingData.paymentMethod
       });
 
@@ -267,9 +226,9 @@ const PassengerDashboard = () => {
       toast.success('Ride requested! Finding a driver...');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to book ride');
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleCancelRide = async () => {

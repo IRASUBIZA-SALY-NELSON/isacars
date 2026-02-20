@@ -22,39 +22,20 @@ const RideDetails = () => {
     try {
       setLoading(true);
       const response = await api.get(`/rides/${rideId}`);
-      setRide(response.data);
+      if (response.data.success) {
+        setRide(response.data.ride);
+      } else {
+        toast.error('Ride not found');
+      }
     } catch (error) {
       console.error('Error fetching ride details:', error);
       toast.error('Failed to load ride details');
-      // Mock data for demo
-      setRide(getMockDetails());
     } finally {
       setLoading(false);
     }
   };
 
-  const getMockDetails = () => ({
-    _id: rideId,
-    status: 'arrived',
-    pickupLocation: {
-      address: '456 Elm Street, Springfield',
-      coordinates: { coordinates: [-89.6501, 39.7817] }
-    },
-    dropoffLocation: {
-      address: '739 Main Street, Springfield',
-      coordinates: { coordinates: [-89.6505, 39.7820] }
-    },
-    driver: {
-      name: 'Jacob Jones',
-      avatar: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=200&h=200&fit=crop',
-      driverDetails: {
-        vehicleModel: 'Omnitrans',
-        vehiclePlate: 'SFX-8326'
-      }
-    },
-    fare: { total: 5750 },
-    paymentMethod: 'card'
-  });
+
 
   const handleBack = () => {
      if (user?.role === 'driver') {
@@ -72,7 +53,17 @@ const RideDetails = () => {
     );
   }
 
-  if (!ride) return null;
+  if (!ride) {
+    return (
+      <div className="ride-details-error">
+        <div className="error-card">
+          <h2>Ride Not Found</h2>
+          <p>We couldn't find the details for this ride. It might have been deleted or never existed.</p>
+          <button onClick={handleBack} className="btn-primary">Go Back</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="ride-details-page">
