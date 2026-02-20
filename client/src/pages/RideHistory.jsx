@@ -99,10 +99,12 @@ const RideHistory = () => {
   return (
     <div style={{display:"flex",height:"100vh",background:"#f4f6f8",overflow:"hidden"}}>
       {user?.role === 'driver' && (
-        <DriverSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} currentPage="history" />
+        <div key="driver-sidebar-wrapper" style={{ display: isSidebarOpen ? 'block' : 'none' }}>
+          <DriverSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} currentPage="history" />
+        </div>
       )}
 
-      <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden"}}>
+      <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"auto"}}>
         <div className="ride-history-new">
       <div className="history-header">
         <div className="header-top">

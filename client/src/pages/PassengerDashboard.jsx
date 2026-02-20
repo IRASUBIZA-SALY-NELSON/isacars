@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Navigation, DollarSign, Clock, Star, LogOut, User, History, Menu, X, Car, Bike, Zap, Shield, Settings, HelpCircle, MessageCircle, AlertTriangle } from 'lucide-react';
+import { MapPin, Navigation, DollarSign, Clock, Star, LogOut, User, History, Menu, X, Car, Bike, Zap, Shield, Settings, HelpCircle, MessageCircle, AlertTriangle, Search, Route, Globe } from 'lucide-react';
 import api from '../utils/api';
 import socketService from '../services/socket';
 import MapComponent from '../components/MapComponent';
@@ -25,6 +25,13 @@ const PassengerDashboard = () => {
   });
   const [fareEstimate, setFareEstimate] = useState(null);
   const [nearbyDriver, setNearbyDriver] = useState(null);
+
+  // Interactive location search state
+  const [pickupSuggestions, setPickupSuggestions] = useState([]);
+  const [dropoffSuggestions, setDropoffSuggestions] = useState([]);
+  const [isSearchingLocation, setIsSearchingLocation] = useState(false);
+  const [selectedRoute, setSelectedRoute] = useState(null);
+  const [routeDistance, setRouteDistance] = useState(null);
 
   useEffect(() => {
     fetchActiveRide();
@@ -105,6 +112,72 @@ const PassengerDashboard = () => {
     setBookingData({
       ...bookingData,
       [name]: value
+    });
+
+    // Trigger location search
+    if (name === 'pickupAddress' && value.length > 2) {
+      searchLocations(value, 'pickup');
+    } else if (name === 'dropoffAddress' && value.length > 2) {
+      searchLocations(value, 'dropoff');
+    }
+  };
+
+  // Mock location search function (replace with real API call)
+  const searchLocations = async (query, type) => {
+    setIsSearchingLocation(true);
+
+    // Simulate API delay
+    setTimeout(() => {
+      const mockLocations = [
+        { id: 1, name: 'Kigali City Center', address: 'Kigali, Rwanda', lat: -1.9441, lng: 30.0619 },
+        { id: 2, name: 'Kigali International Airport', address: 'Kigali, Rwanda', lat: -1.9579, lng: 30.0606 },
+        { id: 3, name: 'Kigali Convention Centre', address: 'Kigali, Rwanda', lat: -1.9431, lng: 30.0589 },
+        { id: 4, name: 'Kimironko Market', address: 'Kigali, Rwanda', lat: -1.9369, lng: 30.1225 },
+        { id: 5, name: 'Nyabugogo Bus Terminal', address: 'Kigali, Rwanda', lat: -1.9489, lng: 30.0585 },
+        { id: 6, name: 'Remera Shopping Center', address: 'Kigali, Rwanda', lat: -1.9514, lng: 30.1113 },
+        { id: 7, name: 'Kacyiru Police Station', address: 'Kigali, Rwanda', lat: -1.9278, lng: 30.0998 },
+        { id: 8, name: 'Gisozi Genocide Memorial', address: 'Kigali, Rwanda', lat: -1.9636, lng: 30.0844 }
+      ];
+
+      const filtered = mockLocations.filter(loc =>
+        loc.name.toLowerCase().includes(query.toLowerCase()) ||
+        loc.address.toLowerCase().includes(query.toLowerCase())
+      );
+
+      if (type === 'pickup') {
+        setPickupSuggestions(filtered);
+      } else {
+        setDropoffSuggestions(filtered);
+      }
+
+      setIsSearchingLocation(false);
+    }, 500);
+  };
+
+  const selectLocation = (location, type) => {
+    if (type === 'pickup') {
+      setBookingData({...bookingData, pickupAddress: location.name});
+      setPickupSuggestions([]);
+    } else {
+      setBookingData({...bookingData, dropoffAddress: location.name});
+      setDropoffSuggestions([]);
+    }
+
+    // Calculate route if both locations are selected
+    if (bookingData.pickupAddress && bookingData.dropoffAddress) {
+      calculateRoute();
+    }
+  };
+
+  const calculateRoute = () => {
+    // Mock route calculation (replace with real API)
+    const distance = Math.random() * 15 + 2; // 2-17 km
+    const duration = distance * 3 + 5; // Rough estimate
+
+    setRouteDistance({
+      distance: distance.toFixed(1),
+      duration: Math.round(duration),
+      estimatedFare: calculateFare(distance)
     });
   };
 
@@ -231,8 +304,6 @@ const PassengerDashboard = () => {
             driver={activeRide?.driver?.driverDetails?.currentLocation}
         />
       </div>
-
-      {/* Header with Hamburger */}
       <header className="app-header">
         <button className="menu-trigger" onClick={() => setSidebarOpen(true)}>
           <Menu size={24} />
@@ -250,38 +321,111 @@ const PassengerDashboard = () => {
 
         {/* Booking Form */}
         {showBooking && !activeRide && (
-          <div className="panel-card booking-form">
-            <h2 className="mb-3 text-lg font-bold">Where to?</h2>
+        <div className="panel-card booking-form">
+          <h2 className="mb-3 text-lg font-bold">Where to?</h2>
 
-            <form onSubmit={handleBookRide}>
-              <div className="input-group">
+          <form onSubmit={handleBookRide}>
+            <div className="location-input-group">
+              <div className="input-wrapper">
                 <MapPin className="input-icon" size={18} color="green" />
                 <input
                   type="text"
                   name="pickupAddress"
                   className="panel-input"
-                  placeholder="Pickup Location"
+                  placeholder="Enter pickup location..."
                   value={bookingData.pickupAddress}
                   onChange={handleInputChange}
                   required
                 />
+                {isSearchingLocation && 'pickupAddress' === 'pickupAddress' && (
+                  <div className="search-spinner">
+                    <div className="spinner-small"></div>
+                  </div>
+                )}
               </div>
 
-              <div className="input-group">
-                <Navigation className="input-icon" size={18} color="red" />
-                <input
-                  type="text"
-                  name="dropoffAddress"
-                  className="panel-input"
-                  placeholder="Dropoff Location"
-                  value={bookingData.dropoffAddress}
-                  onChange={handleInputChange}
-                  required
-                />
+                {/* Pickup Suggestions */}
+                {pickupSuggestions.length > 0 && (
+                  <div className="suggestions-dropdown">
+                    {pickupSuggestions.map((suggestion, index) => (
+                      <div
+                        key={suggestion.id}
+                        className="suggestion-item"
+                        onClick={() => selectLocation(suggestion, 'pickup')}
+                      >
+                        <MapPin size={14} className="suggestion-icon" />
+                        <div>
+                          <div className="suggestion-name">{suggestion.name}</div>
+                          <div className="suggestion-address">{suggestion.address}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              <div className="vehicle-selector">
-                {['economy', 'premium', 'suv', 'bike'].map(type => (
+              <div className="location-input-group">
+                <div className="input-wrapper">
+                  <Navigation className="input-icon" size={18} color="red" />
+                  <input
+                    type="text"
+                    name="dropoffAddress"
+                    className="panel-input"
+                    placeholder="Enter destination..."
+                    value={bookingData.dropoffAddress}
+                    onChange={handleInputChange}
+                    required
+                  />
+                  {isSearchingLocation && 'dropoffAddress' === 'dropoffAddress' && (
+                    <div className="search-spinner">
+                      <div className="spinner-small"></div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Dropoff Suggestions */}
+                {dropoffSuggestions.length > 0 && (
+                  <div className="suggestions-dropdown">
+                    {dropoffSuggestions.map((suggestion, index) => (
+                      <div
+                        key={suggestion.id}
+                        className="suggestion-item"
+                        onClick={() => selectLocation(suggestion, 'dropoff')}
+                      >
+                        <Navigation size={14} className="suggestion-icon" />
+                        <div>
+                          <div className="suggestion-name">{suggestion.name}</div>
+                          <div className="suggestion-address">{suggestion.address}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Route Visualization */}
+              {routeDistance && (
+                <div className="route-visualization">
+                  <div className="route-info">
+                    <div className="route-item">
+                      <Route size={16} />
+                      <span>Distance: {routeDistance.distance} km</span>
+                    </div>
+                    <div className="route-item">
+                      <Clock size={16} />
+                      <span>Duration: {routeDistance.duration} min</span>
+                    </div>
+                    <div className="route-item">
+                      <DollarSign size={16} />
+                      <span>Estimated: {routeDistance.estimatedFare} RWF</span>
+                    </div>
+                  </div>
+                  <div className="route-line"></div>
+                </div>
+              )}
+
+              <div className="vehicle-type-selector">
+                {['economy', 'premium', 'suv', 'bike'].map((type) => (
                   <div
                     key={type}
                     className={`vehicle-option ${bookingData.vehicleType === type ? 'selected' : ''}`}
@@ -429,18 +573,6 @@ const PassengerDashboard = () => {
 
     </div>
   );
-};
-
-const getStatusColor = (status) => {
-  const colors = {
-    pending: 'warning',
-    accepted: 'info',
-    arrived: 'info',
-    started: 'success',
-    completed: 'success',
-    cancelled: 'danger'
-  };
-  return colors[status] || 'info';
 };
 
 export default PassengerDashboard;
