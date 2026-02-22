@@ -14,7 +14,9 @@ class SocketService {
         transports: ['websocket'],
         reconnection: true,
         reconnectionAttempts: 5,
-        reconnectionDelay: 1000
+        reconnectionDelay: 1000,
+        timeout: 20000,
+        forceNew: true
       });
 
       this.socket.on('connect', () => {

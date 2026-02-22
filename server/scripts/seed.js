@@ -21,15 +21,15 @@ const seedUsers = async () => {
     const users = [
       {
         name: 'System Admin',
-        email: 'admin@demo.com',
-        password: 'password123',
+        email: 'admin@gmail.com',
+        password: 'nova@2026',
         role: 'admin',
         phone: '+1000000000'
       },
       {
         name: 'John Passenger',
-        email: 'passenger@demo.com',
-        password: 'password123',
+        email: 'nelson@gmail.com',
+        password: 'nova@2026',
         role: 'passenger',
         phone: '+1111111111',
         passengerDetails: {
@@ -39,8 +39,8 @@ const seedUsers = async () => {
       },
       {
         name: 'Mike Driver',
-        email: 'driver@demo.com',
-        password: 'password123',
+        email: 'isaac@gmail.com',
+        password: 'nova@2026',
         role: 'driver',
         phone: '+2222222222',
         driverDetails: {
@@ -67,10 +67,10 @@ const seedUsers = async () => {
 
     console.log('✅ All users seeded successfully!');
     console.log('-----------------------------------');
-    console.log('👤 Admin:     admin@demo.com');
-    console.log('👤 Passenger: passenger@demo.com');
-    console.log('🚗 Driver:    driver@demo.com');
-    console.log('🔑 Password:  password123 (for all)');
+    console.log('👤 Admin:     admin@gmail.com');
+    console.log('👤 Passenger: nelson@gmail.com');
+    console.log('🚗 Driver:    isaac@gmail.com');
+    console.log('🔑 Password:  nova@2026 (for all)');
     console.log('-----------------------------------');
 
     process.exit(0);

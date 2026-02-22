@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, ArrowRight, Car, Check, Shield, User, Zap, Sparkles, MapPin } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Car, Check, Shield, User, Zap, Sparkles, MapPin, Phone } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import './ImmersiveAuth.css';
@@ -13,7 +13,9 @@ const ImmersiveAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    name: '',
+    phone: ''
   });
   const [errors, setErrors] = useState({});
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -158,9 +160,17 @@ const ImmersiveAuth = () => {
   };
 
   const toggleMode = () => {
-    setIsLogin(!isLogin);
+    const newMode = !isLogin;
+    setIsLogin(newMode);
     setErrors({});
     setFormData({ email: '', password: '' });
+
+    // Update URL to match the mode
+    if (newMode) {
+      navigate('/login');
+    } else {
+      navigate('/register');
+    }
   };
 
   const features = [  ];
@@ -234,6 +244,42 @@ const ImmersiveAuth = () => {
 
           {/* Email/Password Form */}
           <form onSubmit={handleSubmit} className="auth-form">
+            {!isLogin && (
+              <div className="input-group">
+                <div className="input-wrapper">
+                  <User size={20} className="input-icon" />
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="Enter your full name"
+                    className={`auth-input ${errors.name ? 'error' : ''}`}
+                    disabled={isLoading}
+                  />
+                </div>
+                {errors.name && <span className="error-message">{errors.name}</span>}
+              </div>
+            )}
+
+            {!isLogin && (
+              <div className="input-group">
+                <div className="input-wrapper">
+                  <Phone size={20} className="input-icon" />
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder="Enter your phone number"
+                    className={`auth-input ${errors.phone ? 'error' : ''}`}
+                    disabled={isLoading}
+                  />
+                </div>
+                {errors.phone && <span className="error-message">{errors.phone}</span>}
+              </div>
+            )}
+
             <div className="input-group">
               <div className="input-wrapper">
                 <Mail size={20} className="input-icon" />

@@ -32,7 +32,7 @@ const generateToken = (id) => {
  *   "name": "John Doe",
  *   "email": "john@example.com",
  *   "phone": "+1234567890",
- *   "password": "password123",
+ *   "password": "nova@2026",
  *   "role": "passenger"
  * }
  * // Response
@@ -107,7 +107,7 @@ export const register = async (req, res) => {
  * POST /api/auth/login
  * {
  *   "email": "john@example.com",
- *   "password": "password123"
+ *   "password": "nova@2026"
  * }
  * // Response
  * {

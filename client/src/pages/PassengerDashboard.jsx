@@ -453,7 +453,7 @@ const PassengerDashboard = () => {
                   <div className="driver-profile-premium">
                       <div className="avatar-container">
                         <img
-                          src={activeRide.driver.avatar || 'https://via.placeholder.com/60'}
+                          src={activeRide.driver.avatar || 'https://i.pravatar.cc/60?u=driver'}
                           alt="Driver"
                           className="driver-avatar-lg"
                         />

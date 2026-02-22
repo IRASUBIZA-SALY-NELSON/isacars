@@ -131,12 +131,12 @@ The application will be available at:
 You can create new accounts or use these demo credentials:
 
 **Passenger Account:**
-- Email: passenger@demo.com
-- Password: password123
+- Email: nelson@gmail.com
+- Password: nova@2026
 
 **Driver Account:**
-- Email: driver@demo.com
-- Password: password123
+- Email: isaac@gmail.com
+- Password: nova@2026
 
 ### Booking a Ride (Passenger)
 1. Register/Login as a passenger
