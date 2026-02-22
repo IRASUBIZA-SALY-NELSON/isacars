@@ -104,8 +104,23 @@ export const createRide = async (req, res) => {
     const populatedRide = await Ride.findById(ride._id)
       .populate('passenger', 'name phone avatar');
 
-    // Emit socket event to notify nearby drivers
-    req.app.get('io').emit('newRideRequest', populatedRide);
+    // Emit socket event to notify available drivers only
+    const io = req.app.get('io');
+
+    // Find all available drivers
+    const availableDrivers = await User.find({
+      role: 'driver',
+      'driverDetails.isAvailable': true
+    }).select('_id');
+
+    console.log(`🚗 Sending ride request to ${availableDrivers.length} available drivers`);
+    console.log('Available driver IDs:', availableDrivers.map(d => d._id.toString()));
+
+    // Send ride request to each available driver
+    availableDrivers.forEach(driver => {
+      console.log(`📤 Sending ride request to driver ${driver._id}`);
+      io.to(driver._id.toString()).emit('newRideRequest', populatedRide);
+    });
 
     res.status(201).json({
       success: true,
@@ -502,6 +517,32 @@ export const getActiveRide = async (req, res) => {
     });
   }
 };
+
+// @desc    Get all pending ride requests for drivers
+// @route   GET /api/rides/pending
+// @access  Private (Driver)
+export const getPendingRides = async (req, res) => {
+  try {
+    const rides = await Ride.find({
+      status: 'pending',
+      driver: { $exists: false } // Only rides without assigned drivers
+    })
+      .populate('passenger', 'name phone avatar rating')
+      .sort({ createdAt: -1 })
+      .limit(20); // Limit to last 20 requests
+
+    res.status(200).json({
+      success: true,
+      requests: rides
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
 /**
  * @desc    Share ride details with trusted contacts
  * @route   POST /api/rides/:id/share

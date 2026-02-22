@@ -144,7 +144,15 @@ io.on('connection', (socket) => {
   // Join user to their own room
   socket.on('join', (userId) => {
     socket.join(userId);
+    socket.userId = userId; // Store userId for later use
     console.log(`User ${userId} joined their room`);
+  });
+
+  // Driver availability updates
+  socket.on('driverAvailable', (data) => {
+    const { isAvailable } = data;
+    console.log(`Driver ${socket.userId} availability: ${isAvailable}`);
+    // Could store this in a more sophisticated way for production
   });
 
   // Driver location updates
@@ -152,9 +160,10 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('driverLocationUpdate', data);
   });
 
-  // Ride request notifications
+  // Ride request notifications (this should come from the ride controller)
   socket.on('newRideRequest', (data) => {
-    socket.broadcast.emit('newRideRequest', data);
+    // This is now handled in the ride controller
+    console.log('Ride request received (should come from controller)');
   });
 
   // Ride status updates

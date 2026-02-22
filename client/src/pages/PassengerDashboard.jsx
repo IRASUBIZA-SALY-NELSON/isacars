@@ -76,9 +76,12 @@ const PassengerDashboard = () => {
       if (response.data.ride) {
         setActiveRide(response.data.ride);
         setShowBooking(false);
+      } else {
+        setShowBooking(true);
       }
     } catch (error) {
       console.error('Error fetching active ride:', error);
+      setShowBooking(true);
     }
   };
 
@@ -376,7 +379,7 @@ const PassengerDashboard = () => {
                     </div>
                     <div className="route-item">
                       <DollarSign size={16} />
-                      <span>Estimated: {routeDistance.estimatedFare} RWF</span>
+                      <span>Estimated: {fareEstimate?.total || 'Calculating...'} RWF</span>
                     </div>
                   </div>
                   <div className="route-line"></div>

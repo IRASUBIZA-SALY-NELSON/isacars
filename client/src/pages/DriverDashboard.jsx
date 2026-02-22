@@ -47,18 +47,26 @@ const DriverDashboard = () => {
 
   const setupSocketListeners = () => {
     socketService.on('newRideRequest', (ride) => {
+      console.log('🚖 New ride request received:', ride);
+      console.log('Driver availability:', isAvailable);
+      console.log('Active ride:', activeRide);
+
       if (isAvailable && !activeRide) {
         toast.success('New Ride Request Received!', {
           icon: '🚖',
           duration: 6000,
+          onClick: () => navigate('/ride-requests'),
           style: {
             background: '#0f172a',
             color: '#fff',
             borderRadius: '16px',
-            border: '1px solid rgba(255,255,255,0.1)'
+            border: '1px solid rgba(255,255,255,0.1)',
+            cursor: 'pointer'
           }
         });
         setPendingRequests((prev) => [...prev, ride]);
+      } else {
+        console.log('Ignoring ride request - not available or already has active ride');
       }
     });
 
@@ -120,6 +128,10 @@ const DriverDashboard = () => {
       const newStatus = !isAvailable;
       await api.put('/drivers/availability', { isAvailable: newStatus });
       setIsAvailable(newStatus);
+
+      // Notify server about availability change
+      socketService.emit('driverAvailable', { isAvailable: newStatus });
+
       toast.success(newStatus ? 'You are now Online' : 'You are now Offline', {
         icon: newStatus ? '✅' : '💤',
         style: { borderRadius: '12px' }
@@ -210,7 +222,7 @@ const DriverDashboard = () => {
               <DollarSign size={16} color="#22c55e" />
               <span>{earnings.total?.toLocaleString()} RWF</span>
             </div>
-            <button className="notification-btn" onClick={() => setSidebarOpen(true)}>
+            <button className="notification-btn" onClick={() => navigate('/ride-requests')}>
               <Bell size={20} />
               {pendingRequests.length > 0 && <span className="notification-badge">{pendingRequests.length}</span>}
             </button>

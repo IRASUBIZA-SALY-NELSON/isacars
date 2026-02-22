@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
-const seedUsers = async () => {
+const seedDatabase = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('📦 Connected to MongoDB');
@@ -24,7 +24,17 @@ const seedUsers = async () => {
         email: 'admin@gmail.com',
         password: 'nova@2026',
         role: 'admin',
-        phone: '+1000000000'
+        phone: '+1234567890',
+        walletBalance: 0,
+        passengerDetails: { rating: 5.0, ridesTaken: 0 },
+        driverDetails: {
+          licenseNumber: 'ADMIN123',
+          vehicle: { model: 'N/A', plateNumber: 'ADMIN', color: 'Black' },
+          isAvailable: false,
+          rating: 5.0,
+          ridesGiven: 0,
+          earnings: 0
+        }
       },
       {
         name: 'John Passenger',
@@ -75,9 +85,9 @@ const seedUsers = async () => {
 
     process.exit(0);
   } catch (error) {
-    console.error('❌ Error seeding users:', error);
+    console.error('❌ Error seeding database:', error);
     process.exit(1);
   }
 };
 
-seedUsers();
+seedDatabase();

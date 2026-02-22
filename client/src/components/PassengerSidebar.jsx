@@ -10,6 +10,18 @@ const PassengerSidebar = ({ isOpen, onClose, currentPage }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  // Generate user initials from name
+  const getUserInitials = (name) => {
+    if (!name) return 'U';
+
+    const parts = name.trim().split(' ');
+    if (parts.length === 1) {
+      return parts[0].charAt(0).toUpperCase();
+    }
+
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+  };
+
   const handleLogout = () => {
     logout();
     toast.success('Logged out successfully. See you soon!', { icon: '👋' });
@@ -38,15 +50,17 @@ const PassengerSidebar = ({ isOpen, onClose, currentPage }) => {
 
           <div className="user-profile-premium">
             <div className="avatar-wrapper-premium">
-              <img
-                src={user?.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop"}
-                alt="Avatar"
-                className="sidebar-avatar"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "https://ui-avatars.com/api/?name=" + (user?.name || 'User') + "&background=22c55e&color=fff";
-                }}
-              />
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt="Avatar"
+                  className="sidebar-avatar"
+                />
+              ) : (
+                <div className="sidebar-avatar-initials">
+                  {getUserInitials(user?.name)}
+                </div>
+              )}
             </div>
             <div className="profile-info">
               <h3>{user?.name || 'Passenger'}</h3>

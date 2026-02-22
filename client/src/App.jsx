@@ -7,6 +7,7 @@ import ImmersiveAuthPage from './pages/ImmersiveAuthPage';
 import SplitAuthPage from './pages/SplitAuthPage';
 import PassengerDashboard from './pages/PassengerDashboard';
 import DriverDashboard from './pages/DriverDashboard';
+import RideRequests from './pages/RideRequests';
 import AdminDashboard from './pages/AdminDashboard';
 import RideHistory from './pages/RideHistory';
 import RideDetails from './pages/RideDetails';
@@ -196,6 +197,14 @@ function App() {
             element={
               <ProtectedRoute requiredRole="driver">
                 <DriverDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ride-requests"
+            element={
+              <ProtectedRoute requiredRole="driver">
+                <RideRequests />
               </ProtectedRoute>
             }
           />
