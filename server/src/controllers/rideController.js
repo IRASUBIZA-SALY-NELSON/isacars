@@ -527,13 +527,13 @@ export const getPendingRides = async (req, res) => {
       status: 'pending',
       driver: { $in: [null, undefined] }
     })
-      .populate('passenger', 'name phone avatar rating')
+      .populate('passenger', 'name phone avatar passengerDetails.rating')
       .sort({ createdAt: -1 })
       .limit(20); // Limit to last 20 requests
 
     console.log(`Found ${rides.length} pending rides for driver`);
     rides.forEach((ride, index) => {
-      console.log(`Ride ${index + 1}: ${ride._id}, Passenger: ${ride.passenger?.name}`);
+      console.log(`Ride ${index + 1}: ${ride._id}, Passenger: ${ride.passenger?.name}, Phone: ${ride.passenger?.phone}, Rating: ${ride.passenger?.passengerDetails?.rating}`);
     });
 
     res.status(200).json({
