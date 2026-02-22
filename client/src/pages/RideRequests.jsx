@@ -30,10 +30,13 @@ const RideRequests = () => {
 
   const fetchPendingRequests = async () => {
     try {
+      console.log('🔍 Fetching pending requests...');
       const response = await api.get('/rides/pending');
+      console.log('📦 API Response:', response.data);
       setPendingRequests(response.data.requests || []);
+      console.log('✅ Pending requests set:', response.data.requests?.length || 0);
     } catch (error) {
-      console.error('Error fetching pending requests:', error);
+      console.error('❌ Error fetching pending requests:', error);
     }
   };
 
@@ -59,8 +62,8 @@ const RideRequests = () => {
     try {
       const response = await api.put(`/rides/${rideId}/accept`);
       setPendingRequests(prev => prev.filter(r => r._id !== rideId));
-      toast.success('Ride accepted! Navigating to pickup...', { icon: '🏁' });
-      navigate('/driver-dashboard');
+      toast.success('Ride accepted! Check your dashboard for pickup details...', { icon: '🏁' });
+      // Don't navigate away - stay on driver dashboard for real-time updates
     } catch (error) {
       toast.error('Failed to accept ride');
     } finally {
@@ -137,7 +140,9 @@ const RideRequests = () => {
                       {request.passenger?.avatar ? (
                         <img src={request.passenger.avatar} alt="Passenger" />
                       ) : (
-                        <User size={24} />
+                        <img src="/profile.jpeg" alt="Passenger" onError={(e) => {
+                          e.target.src = 'https://via.placeholder.com/150?text=Passenger';
+                        }} />
                       )}
                     </div>
                     <div className="passenger-details">
@@ -150,7 +155,7 @@ const RideRequests = () => {
                   </div>
                   <div className="passenger-rating">
                     <Star size={16} className="star-icon" />
-                    <span>{request.passenger?.rating || '4.5'}</span>
+                    <span>{request.passenger?.passengerDetails?.rating || '4.5'}</span>
                   </div>
                 </div>
 

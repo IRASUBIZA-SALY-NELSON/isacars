@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Navigation, DollarSign, Clock, Star, LogOut, User, History, Menu, X, Car, Bike, Zap, Shield, Settings, HelpCircle, MessageCircle, AlertTriangle, Search, Route, Globe } from 'lucide-react';
+import { MapPin, Navigation, DollarSign, Clock, Star, LogOut, User, History, Menu, X, Car, Bike, Zap, Shield, Settings, HelpCircle, MessageCircle, AlertTriangle, Search, Route, Globe, Phone } from 'lucide-react';
 import api from '../utils/api';
 import socketService from '../services/socket';
 import MapComponent from '../components/MapComponent';
@@ -255,6 +255,15 @@ const PassengerDashboard = () => {
     navigate('/');
   };
 
+  const handleCallDriver = (phoneNumber) => {
+    if (phoneNumber) {
+      window.location.href = `tel:${phoneNumber}`;
+      toast.success(`Calling driver...`, { icon: '📞' });
+    } else {
+      toast.error('Driver phone number not available');
+    }
+  };
+
   return (
     <div className="passenger-dashboard">
       {/* Full Screen Map */}
@@ -469,6 +478,13 @@ const PassengerDashboard = () => {
                           <div className="driver-name-row">
                             <h3>{activeRide.driver.name}</h3>
                             <div className="contact-actions">
+                               <button
+                                 className="action-circle-btn call-btn"
+                                 onClick={() => handleCallDriver(activeRide.driver.phone)}
+                                 title="Call Driver"
+                               >
+                                 <Phone size={16} />
+                               </button>
                                <button className="action-circle-btn"><Clock size={16} /></button>
                                <button className="action-circle-btn"><Star size={16} /></button>
                             </div>
@@ -476,6 +492,9 @@ const PassengerDashboard = () => {
                           <div className="vehicle-info-text text-gray-500">
                              {activeRide.driver.driverDetails?.vehicleColor} {activeRide.driver.driverDetails?.vehicleModel}
                              <span className="plate-pill">{activeRide.driver.driverDetails?.vehiclePlate}</span>
+                          </div>
+                          <div className="driver-phone text-sm text-gray-600 mt-1">
+                             📞 {activeRide.driver.phone}
                           </div>
                       </div>
                   </div>

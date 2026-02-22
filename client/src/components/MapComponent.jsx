@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { MapPin, Navigation, Car } from 'lucide-react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import socketService from '../services/socket.js';
 import './MapComponent.css';
 
 // --- Custom Icons ---
@@ -68,11 +69,13 @@ const MapComponent = ({
   dropoff,
   driver,
   onLocationSelect,
-  className
+  className,
+  userId // Add userId prop for socket connection
 }) => {
   const [userLocation, setUserLocation] = useState(null);
   const [mapCenter, setMapCenter] = useState([40.7128, -74.0060]); // Default NYC
   const [zoom, setZoom] = useState(13);
+  const [realtimeDriverLocation, setRealtimeDriverLocation] = useState(null);
 
   // Get User's Real Location on Mount
   useEffect(() => {
@@ -94,25 +97,77 @@ const MapComponent = ({
     }
   }, [pickup, dropoff]);
 
-  // Calculate Bounds if multiple points exist
+  // Socket connection for real-time driver location updates
+  useEffect(() => {
+    if (userId) {
+      const socket = socketService.connect(userId);
+
+      // Listen for driver location updates
+      socketService.on('driverLocationUpdate', (data) => {
+        console.log('🚗 Driver location update:', data);
+        setRealtimeDriverLocation({
+          coordinates: {
+            type: 'Point',
+            coordinates: [data.location.longitude, data.location.latitude]
+          }
+        });
+      });
+
+      return () => {
+        socketService.off('driverLocationUpdate');
+      };
+    }
+  }, [userId]);
+
+  // Safe coordinate extraction helper
+  const getLatLng = (locationObj) => {
+    if (!locationObj) return null;
+
+    // Case 1: Nested structure like pickup/dropoff { coordinates: { coordinates: [lng, lat] } }
+    if (locationObj.coordinates?.coordinates) {
+      return [...locationObj.coordinates.coordinates].reverse();
+    }
+
+    // Case 2: Simple GeoJSON structure { coordinates: [lng, lat] } (often for driver)
+    if (locationObj.coordinates && Array.isArray(locationObj.coordinates)) {
+      return [...locationObj.coordinates].reverse();
+    }
+
+    // Case 3: Already an array [lat, lng] (like userLocation)
+    if (Array.isArray(locationObj) && locationObj.length === 2) {
+      return locationObj;
+    }
+
+    return null;
+  };
+
   const getBounds = () => {
     const points = [];
-    if (pickup) points.push(pickup.coordinates.coordinates.slice().reverse()); // GeoJSON [lng,lat] -> Leaflet [lat,lng]
-    if (dropoff) points.push(dropoff.coordinates.coordinates.slice().reverse());
-    if (driver) points.push(driver.coordinates.coordinates.slice().reverse());
+
+    const pickupPos = getLatLng(pickup);
+    const dropoffPos = getLatLng(dropoff);
+    const driverPos = getLatLng(driver);
+    const realtimeDriverPos = getLatLng(realtimeDriverLocation);
+
+    if (pickupPos) points.push(pickupPos);
+    if (dropoffPos) points.push(dropoffPos);
+    if (driverPos) points.push(driverPos);
+    if (realtimeDriverPos) points.push(realtimeDriverPos);
     if (userLocation && !pickup && !dropoff) points.push(userLocation);
 
-    // If only one point, return null (use center)
+    // If only one point or none, return null
     if (points.length < 2) return null;
     return L.latLngBounds(points);
   };
 
   const bounds = getBounds();
+  const pickupPos = getLatLng(pickup);
+  const dropoffPos = getLatLng(dropoff);
+  const driverPos = getLatLng(driver);
+  const realtimeDriverPos = getLatLng(realtimeDriverLocation);
 
   // Determine center priority: Pickup > User > Default
-  const currentCenter = pickup
-    ? pickup.coordinates.coordinates.slice().reverse()
-    : (userLocation || mapCenter);
+  const currentCenter = pickupPos || userLocation || mapCenter;
 
   return (
     <div className={`map-wrapper ${className || ''}`} style={{ height: '100%', width: '100%', minHeight: '300px', borderRadius: '12px', overflow: 'hidden', zIndex: 0 }}>
@@ -120,7 +175,7 @@ const MapComponent = ({
         center={currentCenter}
         zoom={zoom}
         style={{ height: '100%', width: '100%' }}
-        zoomControl={false} // We can add custom zoom control if needed
+        zoomControl={false}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -137,21 +192,28 @@ const MapComponent = ({
           </Marker>
         )}
 
-        {pickup && (
-          <Marker position={pickup.coordinates.coordinates.slice().reverse()} icon={pickupIcon}>
-            <Popup>Pickup: {pickup.address}</Popup>
+        {pickupPos && (
+          <Marker position={pickupPos} icon={pickupIcon}>
+            <Popup>Pickup: {pickup?.address || 'Pickup Location'}</Popup>
           </Marker>
         )}
 
-        {dropoff && (
-          <Marker position={dropoff.coordinates.coordinates.slice().reverse()} icon={dropoffIcon}>
-            <Popup>Dropoff: {dropoff.address}</Popup>
+        {dropoffPos && (
+          <Marker position={dropoffPos} icon={dropoffIcon}>
+            <Popup>Dropoff: {dropoff?.address || 'Destination'}</Popup>
           </Marker>
         )}
 
-        {driver && (
-          <Marker position={driver.coordinates.coordinates.slice().reverse()} icon={driverIcon}>
+        {driverPos && (
+          <Marker position={driverPos} icon={driverIcon}>
             <Popup>Driver</Popup>
+          </Marker>
+        )}
+
+        {/* Real-time driver location (shown when available) */}
+        {realtimeDriverPos && (
+          <Marker position={realtimeDriverPos} icon={driverIcon}>
+            <Popup>Driver (Live Location)</Popup>
           </Marker>
         )}
 
