@@ -525,17 +525,23 @@ export const getPendingRides = async (req, res) => {
   try {
     const rides = await Ride.find({
       status: 'pending',
-      driver: { $exists: false } // Only rides without assigned drivers
+      driver: { $in: [null, undefined] }
     })
       .populate('passenger', 'name phone avatar rating')
       .sort({ createdAt: -1 })
       .limit(20); // Limit to last 20 requests
+
+    console.log(`Found ${rides.length} pending rides for driver`);
+    rides.forEach((ride, index) => {
+      console.log(`Ride ${index + 1}: ${ride._id}, Passenger: ${ride.passenger?.name}`);
+    });
 
     res.status(200).json({
       success: true,
       requests: rides
     });
   } catch (error) {
+    console.error('Error fetching pending rides:', error);
     res.status(500).json({
       success: false,
       message: error.message
