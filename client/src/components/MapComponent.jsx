@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { MapPin, Navigation, Car } from 'lucide-react';
+import { MapPin, Navigation, Car, User } from 'lucide-react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import socketService from '../services/socket.js';
 import './MapComponent.css';
@@ -32,6 +32,7 @@ const userIcon = createIcon(Navigation, '#3b82f6'); // Blue
 const pickupIcon = createIcon(MapPin, '#10b981');   // Green
 const dropoffIcon = createIcon(MapPin, '#ef4444');  // Red
 const driverIcon = createIcon(Car, '#f59e0b');      // Orange
+const passengerIcon = createIcon(User, '#8b5cf6');   // Purple
 
 // --- Helper Components ---
 
@@ -70,12 +71,14 @@ const MapComponent = ({
   driver,
   onLocationSelect,
   className,
-  userId // Add userId prop for socket connection
+  userId, // Add userId prop for socket connection
+  passenger // Add passenger prop for passenger location
 }) => {
   const [userLocation, setUserLocation] = useState(null);
   const [mapCenter, setMapCenter] = useState([40.7128, -74.0060]); // Default NYC
   const [zoom, setZoom] = useState(13);
   const [realtimeDriverLocation, setRealtimeDriverLocation] = useState(null);
+  const [realtimePassengerLocation, setRealtimePassengerLocation] = useState(null);
 
   // Get User's Real Location on Mount
   useEffect(() => {
@@ -113,8 +116,20 @@ const MapComponent = ({
         });
       });
 
+      // Listen for passenger location updates (if available)
+      socketService.on('passengerLocationUpdate', (data) => {
+        console.log('👤 Passenger location update:', data);
+        setRealtimePassengerLocation({
+          coordinates: {
+            type: 'Point',
+            coordinates: [data.location.longitude, data.location.latitude]
+          }
+        });
+      });
+
       return () => {
         socketService.off('driverLocationUpdate');
+        socketService.off('passengerLocationUpdate');
       };
     }
   }, [userId]);
@@ -148,11 +163,15 @@ const MapComponent = ({
     const dropoffPos = getLatLng(dropoff);
     const driverPos = getLatLng(driver);
     const realtimeDriverPos = getLatLng(realtimeDriverLocation);
+    const passengerPos = getLatLng(passenger);
+    const realtimePassengerPos = getLatLng(realtimePassengerLocation);
 
     if (pickupPos) points.push(pickupPos);
     if (dropoffPos) points.push(dropoffPos);
     if (driverPos) points.push(driverPos);
     if (realtimeDriverPos) points.push(realtimeDriverPos);
+    if (passengerPos) points.push(passengerPos);
+    if (realtimePassengerPos) points.push(realtimePassengerPos);
     if (userLocation && !pickup && !dropoff) points.push(userLocation);
 
     // If only one point or none, return null
@@ -165,6 +184,8 @@ const MapComponent = ({
   const dropoffPos = getLatLng(dropoff);
   const driverPos = getLatLng(driver);
   const realtimeDriverPos = getLatLng(realtimeDriverLocation);
+  const passengerPos = getLatLng(passenger);
+  const realtimePassengerPos = getLatLng(realtimePassengerLocation);
 
   // Determine center priority: Pickup > User > Default
   const currentCenter = pickupPos || userLocation || mapCenter;
@@ -214,6 +235,20 @@ const MapComponent = ({
         {realtimeDriverPos && (
           <Marker position={realtimeDriverPos} icon={driverIcon}>
             <Popup>Driver (Live Location)</Popup>
+          </Marker>
+        )}
+
+        {/* Passenger location */}
+        {passengerPos && (
+          <Marker position={passengerPos} icon={passengerIcon}>
+            <Popup>Passenger: {passenger?.name || 'Passenger'}</Popup>
+          </Marker>
+        )}
+
+        {/* Real-time passenger location (shown when available) */}
+        {realtimePassengerPos && (
+          <Marker position={realtimePassengerPos} icon={passengerIcon}>
+            <Popup>Passenger (Live Location)</Popup>
           </Marker>
         )}
 

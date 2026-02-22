@@ -237,7 +237,9 @@ const DriverDashboard = () => {
             status={activeRide?.status}
             pickup={activeRide?.pickupLocation}
             dropoff={activeRide?.dropoffLocation}
-            driver={activeRide?.driver?.driverDetails?.currentLocation}
+            driver={user?.driverDetails?.currentLocation}
+            userId={user?.id}
+            passenger={activeRide?.passenger}
           />
 
           {/* Floating Actions */}
